@@ -524,12 +524,6 @@ body.pack-deco h1{letter-spacing:.08em;text-transform:uppercase}
 body.pack-deco .card h3{letter-spacing:.05em}
 
 /* ============ 生成新卡 ============ */
-.btn-generate{
-  font-family:var(--mono);font-size:12px;letter-spacing:.1em;
-  border:2px solid var(--blue);background:var(--blue);color:var(--paper);
-  padding:12px 18px;cursor:pointer;transition:.15s;border-radius:var(--r-md,0);font-weight:600;
-}
-.btn-generate:hover{background:var(--red);border-color:var(--red);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
 .gen-card{max-width:580px}
 .gen-body{padding:24px 30px 28px;display:flex;flex-direction:column;gap:14px}
 .gen-desc{font-size:13.5px;line-height:1.9}
@@ -624,7 +618,7 @@ body.en .morph-card .sub{font-family:var(--serif-zh);font-style:normal}
       <kbd>/</kbd>
     </div>
     <button class="btn-random" id="random"></button>
-    <button class="btn-generate" id="genopen"></button>
+    <button class="btn-random" id="genopen"></button>
   </div>
   <div class="cats" id="cats"></div>
 </div>
@@ -1308,7 +1302,7 @@ const UI = {
     announceHint:"点右上 ↺ 随时复原",
     resetTitle:"恢复默认风格",
     resetToast:"已恢复默认风格",
-    genBtn:"生成新卡 ✦",
+    genBtn:"添加我的卡片 ✦",
     genTitle:"生成一张新档案卡",
     genSub:"Generate a new file card",
     genDesc:"83 张卡里没找到想要的？描述一种风格、流派或设计师，铸造一张可检索、可附身的新档案卡。",
@@ -1354,7 +1348,7 @@ const UI = {
     announceHint:"hit ↺ top-right to undo",
     resetTitle:"Reset to default theme",
     resetToast:"Back to the default theme",
-    genBtn:"New card ✦",
+    genBtn:"Add my card ✦",
     genTitle:"Generate a new file card",
     genSub:"生成一张新档案卡",
     genDesc:"Can't find it among the 83 cards? Describe a style, movement or designer and mint a new searchable, wearable file card.",
