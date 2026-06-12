@@ -58,6 +58,7 @@ header{
 .stamp{
   border:2px solid var(--red);color:var(--red);
   padding:6px 12px;font-weight:600;margin-right:56px;
+  border-radius:var(--r-sm,0);
   transform:rotate(3deg);
   font-size:11px;letter-spacing:.2em;
   animation:stamp-in .6s cubic-bezier(.2,1.4,.4,1) .3s backwards;
@@ -83,6 +84,7 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 }
 .head-stats{
   display:flex;gap:0;border:2px solid var(--ink);background:var(--card);
+  border-radius:var(--r-lg,0);overflow:hidden;
   font-family:var(--mono);max-width:max-content;margin-bottom:-2px;
   animation:rise .7s cubic-bezier(.2,.9,.3,1) .26s backwards;
 }
@@ -101,7 +103,7 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 .searchbox{
   flex:1;min-width:240px;display:flex;align-items:center;gap:10px;
   border:2px solid var(--ink);background:var(--card);padding:10px 14px;
-  transition:box-shadow .2s;color:var(--ink);
+  transition:box-shadow .2s;color:var(--ink);border-radius:var(--r-md,0);
 }
 .searchbox:focus-within{box-shadow:4px 4px 0 var(--blue)}
 .searchbox svg{flex-shrink:0}
@@ -117,7 +119,7 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 .btn-random{
   font-family:var(--mono);font-size:12px;letter-spacing:.1em;
   border:2px solid var(--ink);background:var(--ink);color:var(--paper);
-  padding:12px 18px;cursor:pointer;transition:.15s;
+  padding:12px 18px;cursor:pointer;transition:.15s;border-radius:var(--r-md,0);
 }
 .btn-random:hover{background:var(--red);border-color:var(--red);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
 .btn-lang{
@@ -142,13 +144,14 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 .btn-reset:hover{background:var(--red);border-color:var(--red);color:var(--paper);transform:translate(-1px,-1px) rotate(-40deg);box-shadow:4px 4px 0 var(--blue)}
 /* 风格变身过渡 */
 .morphing,.morphing *{
-  transition:background-color .7s ease,color .7s ease,border-color .7s ease,box-shadow .7s ease,fill .7s ease !important;
+  transition:background-color .7s ease,color .7s ease,border-color .7s ease,box-shadow .7s ease,fill .7s ease,border-radius .7s ease !important;
 }
 .cats{max-width:1280px;margin:0 auto;padding:0 32px 14px;display:flex;gap:8px;flex-wrap:wrap}
 .chip{
   font-family:var(--mono);font-size:12px;letter-spacing:.06em;
   border:1.5px solid var(--ink);background:transparent;color:var(--ink);
   padding:7px 14px;cursor:pointer;transition:.15s;display:flex;gap:8px;align-items:center;
+  border-radius:var(--r-md,0);
 }
 .chip i{font-style:normal;font-size:10px;color:var(--ink-soft)}
 .chip:hover{background:var(--paper-2)}
@@ -159,7 +162,7 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
   appearance:none;-webkit-appearance:none;width:100%;
   font-family:var(--mono);font-size:13px;letter-spacing:.06em;
   padding:11px 40px 11px 14px;border:2px solid var(--ink);
-  background:var(--card);color:var(--ink);cursor:pointer;border-radius:0;
+  background:var(--card);color:var(--ink);cursor:pointer;border-radius:var(--r-md,0);
 }
 .cat-select::after{
   content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);
@@ -179,19 +182,20 @@ main{max-width:1280px;margin:0 auto;padding:36px 32px 90px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
 .card{
   border:2px solid var(--ink);background:var(--card);
+  border-radius:var(--r-lg,0);
   padding:18px 18px 16px;cursor:pointer;position:relative;
   display:flex;flex-direction:column;gap:12px;
   transition:transform .18s cubic-bezier(.2,.9,.3,1),box-shadow .18s;
   animation:card-in .5s cubic-bezier(.2,.9,.3,1) backwards;
 }
 @keyframes card-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--blue)}
+.card:hover{transform:translate(-3px,-3px);box-shadow:var(--shadow-hover,6px 6px 0 var(--blue))}
 .card:hover .card-no{color:var(--red)}
 .card-top{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono)}
 .card-no{font-size:11px;letter-spacing:.1em;color:var(--ink-soft);transition:.15s}
 .card-cat{
   font-size:10px;letter-spacing:.16em;border:1px solid var(--line-strong);
-  padding:3px 8px;color:var(--ink-soft);
+  padding:3px 8px;color:var(--ink-soft);border-radius:var(--r-sm,0);
 }
 .card h3{font-size:21px;font-weight:700;line-height:1.3}
 body.en .card h3{font-size:19px;line-height:1.25}
@@ -201,13 +205,13 @@ body.en .card h3{font-size:19px;line-height:1.25}
 }
 body.en .card .en{font-family:var(--serif-zh);font-style:normal}
 .card .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ink-soft)}
-.palette{display:flex;height:22px;border:1.5px solid var(--ink);overflow:hidden;margin-top:auto}
+.palette{display:flex;height:22px;border:1.5px solid var(--ink);overflow:hidden;margin-top:auto;border-radius:var(--r-sm,0)}
 .palette i{flex:1;transition:flex .25s}
 .card:hover .palette i:hover{flex:2.6}
 .card .tags{display:flex;gap:6px;flex-wrap:wrap}
 .card .tags span{
   font-family:var(--mono);font-size:10px;color:var(--ink-soft);
-  border:1px dashed var(--line-strong);padding:2px 7px;
+  border:1px dashed var(--line-strong);padding:2px 7px;border-radius:var(--r-sm,0);
 }
 .empty{
   grid-column:1/-1;text-align:center;padding:80px 0;color:var(--ink-soft);
@@ -223,6 +227,7 @@ body.en .card .en{font-family:var(--serif-zh);font-style:normal}
 .overlay.open{display:flex}
 .dossier{
   background:var(--card);border:3px solid var(--ink);max-width:880px;width:100%;
+  border-radius:var(--r-lg,0);overflow:hidden;
   box-shadow:12px 12px 0 var(--blue);position:relative;
   animation:dossier-in .35s cubic-bezier(.2,1.1,.3,1) backwards;
 }
@@ -239,6 +244,7 @@ body.en .dossier-head .en{font-family:var(--serif-zh);font-style:normal}
 .btn-close{
   border:2px solid var(--ink);background:transparent;cursor:pointer;flex-shrink:0;
   width:40px;height:40px;font-size:18px;font-family:var(--mono);color:var(--ink);transition:.15s;
+  border-radius:var(--r-md,0);
 }
 .btn-close:hover{background:var(--red);border-color:var(--red);color:var(--paper)}
 .dossier-body{display:grid;grid-template-columns:225px 1fr}
@@ -260,7 +266,7 @@ body.en .dossier-head .en{font-family:var(--serif-zh);font-style:normal}
   border:none;background:none;padding:0;transition:.12s;
 }
 .swatch:hover{transform:translateX(3px);color:var(--ink)}
-.swatch i{width:34px;height:20px;border:1.5px solid var(--ink);flex-shrink:0}
+.swatch i{width:34px;height:20px;border:1.5px solid var(--ink);flex-shrink:0;border-radius:var(--r-sm,0)}
 .dossier-main{padding:26px 30px;display:flex;flex-direction:column;gap:24px;min-width:0}
 .sec-title{
   font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-soft);
@@ -273,20 +279,22 @@ body.en .dossier-main .desc{line-height:1.8}
 .figures li{
   list-style:none;font-size:13.5px;padding-left:18px;position:relative;line-height:1.8;
 }
-.figures li::before{content:"※";position:absolute;left:0;color:var(--red);font-size:11px;top:4px}
+.figures li::before{content:var(--motif,"※");position:absolute;left:0;color:var(--red);font-size:11px;top:4px}
 .trait-tags{display:flex;gap:7px;flex-wrap:wrap}
 .trait-tags button{
   font-family:var(--mono);font-size:11.5px;border:1.5px solid var(--ink);
   background:transparent;padding:5px 11px;cursor:pointer;color:var(--ink);transition:.13s;
+  border-radius:var(--r-md,0);
 }
 .trait-tags button:hover{background:var(--blue);border-color:var(--blue);color:var(--paper)}
 .prompt-box{
   border:2px solid var(--ink);background:var(--ink);color:var(--paper);
   font-family:var(--mono);font-size:12.5px;line-height:1.9;padding:16px 18px;position:relative;
+  border-radius:var(--r-lg,0);
 }
 .prompt-box .ph{color:#F2B6A0}
 .btn-copy{
-  position:absolute;top:-2px;right:-2px;border:2px solid var(--ink);
+  position:absolute;top:-2px;right:-2px;border:2px solid var(--ink);border-radius:var(--r-sm,0);
   background:var(--red);color:var(--paper);font-family:var(--mono);font-size:10.5px;
   letter-spacing:.12em;padding:7px 13px;cursor:pointer;transition:.15s;
 }
@@ -296,9 +304,157 @@ body.en .dossier-main .desc{line-height:1.8}
   font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-decoration:none;
   border:1.5px solid var(--ink);color:var(--ink);padding:8px 13px;
   display:flex;gap:7px;align-items:center;transition:.13s;background:var(--card);
+  border-radius:var(--r-md,0);
 }
 .links a:hover{background:var(--ink);color:var(--paper);transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--red)}
 .links a::after{content:"↗";font-size:10px}
+
+/* ================================================================
+   风格包 STYLE PACKS —— 变身时按词条映射切换形状语法 / 背景图案 / 装饰符号
+   ================================================================ */
+/* 变身后：计数行 / 档案栏目 / 印章前出现该风格的装饰符号 */
+body[class*="pack-"] #count::before{content:var(--motif,"■") "  ";color:var(--red)}
+body[class*="pack-"] .sec-title::before{content:var(--motif,"■");color:var(--red);font-size:9px}
+body[class*="pack-"] #stamp::before{content:var(--motif,"■") " "}
+
+/* —— 瑞士 swiss：默认直角网格，仅换符号 —— */
+body.pack-swiss{--motif:"■"}
+
+/* —— 微圆 soft：8–12px 圆角 + 细点阵 —— */
+body.pack-soft{
+  --r-lg:12px;--r-md:8px;--r-sm:5px;--motif:"●";
+  background-image:radial-gradient(var(--line) 1.5px,transparent 1.6px);
+  background-size:26px 26px;
+}
+
+/* —— 药丸 pill：全圆角玩具感 + 彩色波点 —— */
+body.pack-pill{
+  --r-lg:26px;--r-md:999px;--r-sm:999px;--motif:"⬤";
+  background-image:
+    radial-gradient(color-mix(in srgb,var(--blue) 20%,transparent) 5px,transparent 6px),
+    radial-gradient(color-mix(in srgb,var(--red) 16%,transparent) 4px,transparent 5px);
+  background-size:96px 96px,72px 72px;
+  background-position:0 0,38px 50px;
+}
+body.pack-pill .head-stats div{border-right-width:1.5px}
+
+/* —— 有机 organic：不对称鹅卵石圆角 + 同心波纹 —— */
+body.pack-organic{
+  --r-lg:26px 9px 30px 8px;--r-md:16px 6px 14px 7px;--r-sm:9px 4px 10px 5px;--motif:"❀";
+  background-image:repeating-radial-gradient(circle at 14% -12%,transparent 0 40px,var(--line) 40px 41px);
+}
+body.pack-organic .btn-random,body.pack-organic .btn-lang,body.pack-organic .btn-reset{
+  border-radius:54% 46% 48% 52% / 48% 52% 46% 54%;
+}
+
+/* —— 斜切 bevel：切角多边形 + 斜纹 —— */
+body.pack-bevel{
+  --motif:"◆";
+  background-image:repeating-linear-gradient(45deg,transparent 0 26px,var(--line) 26px 27px);
+}
+body.pack-bevel .card,body.pack-bevel .searchbox,body.pack-bevel .head-stats,
+body.pack-bevel .btn-random,body.pack-bevel .prompt-box,body.pack-bevel .morph-card{
+  clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+}
+body.pack-bevel .chip,body.pack-bevel .links a,body.pack-bevel .trait-tags button,
+body.pack-bevel .btn-close,body.pack-bevel .card-cat,body.pack-bevel .cat-select select{
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+}
+
+/* —— 装饰艺术 deco：对称切角 + 日出放射纹 —— */
+body.pack-deco{
+  --motif:"◈";
+  background-image:repeating-conic-gradient(from -90deg at 50% -18%,var(--line) 0deg .5deg,transparent .5deg 7deg);
+}
+body.pack-deco .card,body.pack-deco .searchbox,body.pack-deco .head-stats,
+body.pack-deco .btn-random,body.pack-deco .prompt-box,body.pack-deco .morph-card{
+  clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);
+}
+body.pack-deco .chip,body.pack-deco .links a,body.pack-deco .trait-tags button,
+body.pack-deco .btn-close,body.pack-deco .cat-select select{
+  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px);
+}
+
+/* 切角包的悬停补偿：clip-path 会裁掉外阴影，改用描边提亮 */
+body.pack-bevel .card:hover,body.pack-deco .card:hover,body.pack-pixel .card:hover{
+  box-shadow:none;border-color:var(--blue);
+}
+
+/* —— 霓虹 neon：微圆 + 扫描线 + 辉光 —— */
+body.pack-neon{
+  --r-lg:8px;--r-md:4px;--r-sm:3px;--motif:"✦";
+  --shadow-hover:0 0 26px color-mix(in srgb,var(--blue) 65%,transparent);
+  background-image:repeating-linear-gradient(0deg,transparent 0 3px,color-mix(in srgb,var(--ink) 7%,transparent) 3px 4px);
+}
+body.pack-neon .card,body.pack-neon .searchbox{border-color:color-mix(in srgb,var(--ink) 50%,var(--blue))}
+body.pack-neon h1 .ji{text-shadow:0 0 20px var(--blue)}
+body.pack-neon .searchbox:focus-within{box-shadow:0 0 18px color-mix(in srgb,var(--blue) 60%,transparent)}
+body.pack-neon .links a:hover{box-shadow:0 0 14px color-mix(in srgb,var(--red) 70%,transparent)}
+
+/* —— 像素 pixel：阶梯锯齿角 + 小方格 —— */
+body.pack-pixel{
+  --motif:"▚";
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 11px,var(--line) 11px,var(--line) 12px),
+    repeating-linear-gradient(90deg,transparent,transparent 11px,var(--line) 11px,var(--line) 12px);
+  background-size:12px 12px;
+}
+body.pack-pixel .card,body.pack-pixel .searchbox,body.pack-pixel .btn-random,
+body.pack-pixel .prompt-box,body.pack-pixel .morph-card{
+  clip-path:polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
+}
+body.pack-pixel .chip,body.pack-pixel .links a,body.pack-pixel .trait-tags button{
+  clip-path:polygon(0 5px,5px 5px,5px 0,calc(100% - 5px) 0,calc(100% - 5px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 5px) calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 5px),0 calc(100% - 5px));
+}
+
+/* —— 禅意 zen：细线框 + 素背景 + 柔影 —— */
+body.pack-zen{
+  --r-lg:2px;--r-md:2px;--r-sm:2px;--motif:"○";
+  --shadow-hover:0 14px 34px color-mix(in srgb,var(--ink) 14%,transparent);
+  background-image:none;
+}
+body.pack-zen .card,body.pack-zen .searchbox,body.pack-zen .head-stats,body.pack-zen .chip,
+body.pack-zen .btn-random,body.pack-zen .links a,body.pack-zen .trait-tags button,
+body.pack-zen .palette,body.pack-zen .cat-select select,body.pack-zen .prompt-box{border-width:1px}
+body.pack-zen .dossier{border-width:1px;box-shadow:0 24px 60px color-mix(in srgb,var(--ink) 25%,transparent)}
+
+/* —— 粗野 brutal：3px 厚框 + 巨硬阴影 + 无图案 —— */
+body.pack-brutal{
+  --motif:"█";
+  --shadow-hover:9px 9px 0 var(--ink);
+  background-image:none;
+}
+body.pack-brutal .card,body.pack-brutal .searchbox,body.pack-brutal .head-stats,body.pack-brutal .chip,
+body.pack-brutal .btn-random,body.pack-brutal .links a,body.pack-brutal .trait-tags button,
+body.pack-brutal .palette,body.pack-brutal .cat-select select{border-width:3px}
+body.pack-brutal .card h3{text-transform:uppercase;letter-spacing:.02em}
+
+/* —— 混乱 chaos：卡片歪斜 + 杂乱斜线 —— */
+body.pack-chaos{--motif:"✖"}
+body.pack-chaos{
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 47px,var(--line) 47px,var(--line) 48px),
+    repeating-linear-gradient(-56deg,transparent 0 110px,var(--line) 110px 111px);
+  background-size:48px 48px,auto;
+}
+body.pack-chaos .card:nth-child(odd){transform:rotate(-1.1deg)}
+body.pack-chaos .card:nth-child(even){transform:rotate(.9deg)}
+body.pack-chaos .card:nth-child(odd):hover{transform:rotate(-1.1deg) translate(-3px,-3px)}
+body.pack-chaos .card:nth-child(even):hover{transform:rotate(.9deg) translate(-3px,-3px)}
+body.pack-chaos .card-cat{transform:rotate(2.5deg)}
+body.pack-chaos #stamp{transform:rotate(-3deg)}
+
+/* —— 华丽 ornate：内描金双框 + 交叉网纹 —— */
+body.pack-ornate{
+  --r-lg:3px;--r-md:3px;--r-sm:2px;--motif:"❖";
+  background-image:
+    repeating-linear-gradient(45deg,transparent 0 30px,var(--line) 30px 31px),
+    repeating-linear-gradient(-45deg,transparent 0 30px,var(--line) 30px 31px);
+}
+body.pack-ornate .card,body.pack-ornate .dossier,body.pack-ornate .morph-card,body.pack-ornate .head-stats{
+  outline:1px solid var(--ink);outline-offset:-7px;
+}
+body.pack-ornate .prompt-box{outline:1px solid var(--paper);outline-offset:-7px}
 
 /* ============ 页脚 ============ */
 footer{
@@ -316,7 +472,7 @@ footer{
 .morph-announce.closing{opacity:0}
 .morph-card{
   border:3px solid var(--ink);background:var(--card);
-  box-shadow:10px 10px 0 var(--blue);
+  box-shadow:10px 10px 0 var(--blue);border-radius:var(--r-lg,0);
   padding:38px 48px 30px;text-align:center;max-width:520px;width:100%;
   animation:morph-pop .55s cubic-bezier(.2,1.4,.4,1) backwards;
 }
@@ -328,7 +484,7 @@ footer{
 .morph-card h4{font-size:clamp(26px,5vw,40px);font-weight:900;line-height:1.2}
 .morph-card .sub{font-family:var(--serif-en);font-style:italic;font-size:17px;color:var(--blue);margin-top:6px}
 body.en .morph-card .sub{font-family:var(--serif-zh);font-style:normal}
-.morph-card .strip{display:flex;height:16px;border:1.5px solid var(--ink);margin:20px auto 16px;max-width:240px}
+.morph-card .strip{display:flex;height:16px;border:1.5px solid var(--ink);margin:20px auto 16px;max-width:240px;border-radius:var(--r-sm,0);overflow:hidden}
 .morph-card .strip i{flex:1}
 .morph-card .hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-soft)}
 
@@ -336,7 +492,7 @@ body.en .morph-card .sub{font-family:var(--serif-zh);font-style:normal}
   position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);
   background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:12px;
   letter-spacing:.1em;padding:12px 22px;z-index:200;transition:transform .3s cubic-bezier(.2,1.2,.3,1);
-  border:2px solid var(--ink);box-shadow:5px 5px 0 var(--red);
+  border:2px solid var(--ink);box-shadow:5px 5px 0 var(--red);border-radius:var(--r-md,0);
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
 </style>
@@ -1070,7 +1226,7 @@ const $ = s => document.querySelector(s);
 const grid = $("#grid"), overlay = $("#overlay"), dossier = $("#dossier"), toast = $("#toast");
 let lang = localStorage.getItem("archive-lang") || "en";
 let activeCat = "all", query = "", currentIdx = null;
-let themeIdx = null, pendingMorph = null;
+let themeIdx = null;
 
 const pad = n => String(n + 1).padStart(3, "0");
 const T = () => UI[lang];
@@ -1209,13 +1365,12 @@ function openDossier(idx){
   document.body.style.overflow = "hidden";
 }
 function closeDossier(){
+  const i = currentIdx;
   currentIdx = null;
   overlay.classList.remove("open");
   document.body.style.overflow = "";
-  if (pendingMorph !== null){
-    const i = pendingMorph; pendingMorph = null;
-    applyTheme(i);
-  }
+  // 读完任何一张卡片，整站变身为它的风格（已是当前风格则跳过）
+  if (i !== null && themeIdx !== i) applyTheme(i);
 }
 
 /* ================================================================
@@ -1231,6 +1386,46 @@ const rgbS = c => `rgb(${c[0]},${c[1]},${c[2]})`;
 const rgbaS = (c,al) => `rgba(${c[0]},${c[1]},${c[2]},${al})`;
 
 const THEME_VARS = ["--paper","--paper-2","--card","--ink","--ink-soft","--blue","--red","--line","--line-strong"];
+
+/* 词条 → 风格包：决定变身时的形状语法（圆角/切角/有机/像素…）、背景图案与装饰符号 */
+const PACK_NAMES = ["swiss","soft","pill","organic","bevel","deco","neon","pixel","zen","brutal","chaos","ornate"];
+const PACK_OF = {
+  /* 设计史 */
+  "Arts and Crafts Movement":"ornate","Art Nouveau":"organic","Vienna Secession":"deco",
+  "Deutscher Werkbund":"swiss","Art Deco":"deco","Bauhaus":"swiss","Streamline Moderne":"pill",
+  "International Typographic Style":"swiss","Postwar Japanese Graphic Design":"zen",
+  "Postmodern Design":"chaos","Memphis Design":"pill","Deconstructivism":"chaos",
+  "Minimalist Design":"zen","Y2K Aesthetic":"pill",
+  /* 美术流派 */
+  "Gothic Art":"bevel","Baroque":"ornate","Rococo":"ornate","Ukiyo-e":"organic",
+  "Impressionism":"soft","Post-Impressionism":"organic","Fauvism":"pill","Expressionism":"bevel",
+  "Cubism":"bevel","Futurism":"bevel","Dada":"chaos","Constructivism":"bevel",
+  "Suprematism":"zen","De Stijl":"swiss","Surrealism":"organic","Abstract Expressionism":"chaos",
+  "Pop Art":"pill","Op Art":"bevel",
+  /* 设计师 */
+  "Jan Tschichold":"swiss","Josef Müller-Brockmann":"swiss","Paul Rand":"soft","Saul Bass":"bevel",
+  "Milton Glaser":"organic","Massimo Vignelli":"swiss","Dieter Rams":"soft","Ikko Tanaka":"zen",
+  "Shigeo Fukuda":"swiss","Tadanori Yokoo":"chaos","Kenya Hara":"zen","Naoto Fukasawa":"soft",
+  "Neville Brody":"bevel","David Carson":"chaos","Stefan Sagmeister":"chaos","Zaha Hadid":"organic",
+  "Charles & Ray Eames":"soft","Ettore Sottsass":"pill","Sori Yanagi":"organic","Virgil Abloh":"bevel",
+  /* 风格语汇 */
+  "Mid-Century Modern":"soft","Scandinavian Design":"soft","Wabi-Sabi":"zen","Brutalism":"brutal",
+  "Cyberpunk":"neon","Steampunk":"ornate","Vaporwave":"neon","Retrofuturism":"pill",
+  "Acid Graphics":"neon","Flat Design":"soft","Skeuomorphism":"soft","Neumorphism":"pill",
+  "Glassmorphism":"soft","Isometric Illustration":"bevel","Low Poly":"bevel","Pixel Art":"pixel",
+  "China-Chic / Guochao":"ornate",
+  /* 平面与字体 */
+  "Grid System":"swiss","Swiss Typography":"swiss","Editorial Design":"swiss",
+  "Typographic Poster":"swiss","Kinetic Typography":"neon","Calligraphy & Lettering":"organic",
+  /* 色彩与材质 */
+  "International Klein Blue":"zen","Morandi Palette":"zen","Dopamine Colors":"pill",
+  "Holographic Gradient":"neon","Clay Render / Clay 3D":"pill","Neon Glow":"neon",
+  "Chrome / Liquid Metal":"organic","Risograph Print":"soft"
+};
+function setPack(pack){
+  PACK_NAMES.forEach(p => document.body.classList.remove("pack-" + p));
+  if (pack) document.body.classList.add("pack-" + pack);
+}
 
 function morphTransition(){
   document.body.classList.add("morphing");
@@ -1265,6 +1460,7 @@ function applyTheme(idx){
   r.setProperty("--red", rgbS(a2));
   r.setProperty("--line", rgbaS(ink,0.18));
   r.setProperty("--line-strong", rgbaS(ink,0.55));
+  setPack(PACK_OF[d.en] || "swiss");
   themeIdx = idx;
   updateStamp();
   $("#resetbtn").classList.add("show");
@@ -1297,6 +1493,7 @@ announce.addEventListener("click", () => { clearTimeout(announceMorph._t); hideA
 function resetTheme(){
   morphTransition();
   THEME_VARS.forEach(v => document.documentElement.style.removeProperty(v));
+  setPack(null);
   themeIdx = null;
   updateStamp();
   $("#resetbtn").classList.remove("show");
@@ -1373,9 +1570,7 @@ document.addEventListener("keydown", e => {
 });
 $("#search").addEventListener("input", e => { query = e.target.value; render(); });
 $("#random").addEventListener("click", () => {
-  const idx = Math.floor(Math.random()*DATA.length);
-  pendingMorph = idx;            // 读完这张卡（关闭弹窗）后，整站变身为它的风格
-  openDossier(idx);
+  openDossier(Math.floor(Math.random()*DATA.length));
 });
 $("#resetbtn").addEventListener("click", resetTheme);
 $("#langbtn").addEventListener("click", () => {
