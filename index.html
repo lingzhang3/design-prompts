@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>设计语汇档案馆 · The Design Prompt Archive</title>
+<title>The Design Prompt Archive · 设计语汇档案馆</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -992,7 +992,7 @@ const UI = {
 /* ================================================================ */
 const $ = s => document.querySelector(s);
 const grid = $("#grid"), overlay = $("#overlay"), dossier = $("#dossier"), toast = $("#toast");
-let lang = localStorage.getItem("archive-lang") || "zh";
+let lang = localStorage.getItem("archive-lang") || "en";
 let activeCat = "all", query = "", currentIdx = null;
 
 const pad = n => String(n + 1).padStart(3, "0");
