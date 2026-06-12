@@ -45,7 +45,6 @@ body::after{
 
 /* ============ 头部 ============ */
 header{
-  border-bottom:3px solid var(--ink);
   background:var(--paper);
   position:relative;
 }
@@ -85,7 +84,7 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 .head-stats{
   display:flex;gap:0;border:2px solid var(--ink);background:var(--card);
   border-radius:var(--r-lg,0);overflow:hidden;
-  font-family:var(--mono);max-width:max-content;margin-bottom:-2px;
+  font-family:var(--mono);max-width:max-content;margin-bottom:34px;
   animation:rise .7s cubic-bezier(.2,.9,.3,1) .26s backwards;
 }
 .head-stats div{padding:12px 22px;border-right:2px solid var(--ink)}
@@ -343,9 +342,12 @@ body.pack-organic{
   --r-lg:26px 9px 30px 8px;--r-md:16px 6px 14px 7px;--r-sm:9px 4px 10px 5px;--motif:"❀";
   background-image:repeating-radial-gradient(circle at 14% -12%,transparent 0 40px,var(--line) 40px 41px);
 }
-body.pack-organic .btn-random,body.pack-organic .btn-lang,body.pack-organic .btn-reset{
-  border-radius:54% 46% 48% 52% / 48% 52% 46% 54%;
-}
+/* 有机风按钮：叶片形，悬停时翻转叶脉方向 */
+body.pack-organic .btn-random{border-radius:26px 6px 26px 6px}
+body.pack-organic .btn-random:hover{border-radius:6px 26px 6px 26px}
+body.pack-organic .btn-lang,body.pack-organic .btn-reset{border-radius:24px 7px 24px 7px}
+body.pack-organic .btn-lang:hover,body.pack-organic .btn-reset:hover{border-radius:7px 24px 7px 24px}
+body.pack-organic .chip.on{border-radius:18px 5px 18px 5px}
 
 /* —— 斜切 bevel：切角多边形 + 斜纹 —— */
 body.pack-bevel{
