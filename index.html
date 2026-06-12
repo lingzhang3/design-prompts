@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设计语汇档案馆 · The Design Prompt Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EDE2;
+  --paper-2:#EAE3D3;
+  --card:#F7F3E9;
+  --ink:#191512;
+  --ink-soft:#5C544A;
+  --blue:#002FA7;
+  --red:#D93A1E;
+  --line:rgba(25,21,18,.18);
+  --line-strong:rgba(25,21,18,.55);
+  --serif-zh:"Noto Serif SC",serif;
+  --serif-en:"Fraunces",serif;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--serif-zh);
+  min-height:100vh;
+  /* 纸张噪点 + 细网格 */
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 47px, var(--line) 47px, var(--line) 48px),
+    repeating-linear-gradient(90deg, transparent, transparent 47px, var(--line) 47px, var(--line) 48px);
+  background-size:48px 48px;
+}
+body.en{font-family:var(--serif-en);}
+body.en h1{letter-spacing:0}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--blue);color:var(--paper)}
+
+/* ============ 头部 ============ */
+header{
+  border-bottom:3px solid var(--ink);
+  background:var(--paper);
+  position:relative;
+}
+.head-inner{max-width:1280px;margin:0 auto;padding:42px 32px 0}
+.head-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.stamp{
+  border:2px solid var(--red);color:var(--red);
+  padding:6px 12px;font-weight:600;
+  transform:rotate(3deg);
+  font-size:11px;letter-spacing:.2em;
+  animation:stamp-in .6s cubic-bezier(.2,1.4,.4,1) .3s backwards;
+}
+@keyframes stamp-in{from{opacity:0;transform:rotate(3deg) scale(2.2)}to{opacity:1;transform:rotate(3deg) scale(1)}}
+h1{
+  font-size:clamp(44px,7.5vw,104px);
+  font-weight:900;line-height:1.02;
+  margin:18px 0 6px;letter-spacing:.02em;
+  animation:rise .7s cubic-bezier(.2,.9,.3,1) backwards;
+}
+h1 .ji{color:var(--blue)}
+.head-en{
+  font-family:var(--serif-en);font-style:italic;font-weight:400;
+  font-size:clamp(17px,2.4vw,26px);color:var(--ink-soft);
+  animation:rise .7s cubic-bezier(.2,.9,.3,1) .1s backwards;
+}
+body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(15px,2vw,22px)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.head-desc{
+  max-width:620px;margin:20px 0 26px;font-size:14px;line-height:1.9;color:var(--ink-soft);
+  animation:rise .7s cubic-bezier(.2,.9,.3,1) .18s backwards;
+}
+.head-stats{
+  display:flex;gap:0;border:2px solid var(--ink);background:var(--card);
+  font-family:var(--mono);max-width:max-content;margin-bottom:-2px;
+  animation:rise .7s cubic-bezier(.2,.9,.3,1) .26s backwards;
+}
+.head-stats div{padding:12px 22px;border-right:2px solid var(--ink)}
+.head-stats div:last-child{border-right:none}
+.head-stats b{display:block;font-size:24px;font-weight:600;color:var(--blue)}
+.head-stats span{font-size:10px;letter-spacing:.18em;color:var(--ink-soft)}
+
+/* ============ 工具栏 ============ */
+.toolbar{
+  position:sticky;top:0;z-index:50;
+  background:var(--paper);border-bottom:2px solid var(--ink);
+  box-shadow:0 1px 0 var(--paper);
+}
+.toolbar-inner{max-width:1280px;margin:0 auto;padding:14px 32px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.searchbox{
+  flex:1;min-width:240px;display:flex;align-items:center;gap:10px;
+  border:2px solid var(--ink);background:var(--card);padding:10px 14px;
+  transition:box-shadow .2s;
+}
+.searchbox:focus-within{box-shadow:4px 4px 0 var(--blue)}
+.searchbox svg{flex-shrink:0}
+.searchbox input{
+  border:none;outline:none;background:transparent;width:100%;
+  font-family:var(--mono);font-size:14px;color:var(--ink);
+}
+.searchbox input::placeholder{color:var(--ink-soft);opacity:.7}
+.searchbox kbd{
+  font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);
+  padding:2px 7px;color:var(--ink-soft);border-radius:3px;
+}
+.btn-random{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  border:2px solid var(--ink);background:var(--ink);color:var(--paper);
+  padding:12px 18px;cursor:pointer;transition:.15s;
+}
+.btn-random:hover{background:var(--red);border-color:var(--red);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.btn-lang{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  border:2px solid var(--blue);background:transparent;color:var(--blue);
+  padding:12px 18px;cursor:pointer;transition:.15s;font-weight:600;
+}
+.btn-lang:hover{background:var(--blue);color:var(--paper);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.cats{max-width:1280px;margin:0 auto;padding:0 32px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.chip{
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+  border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+  padding:7px 14px;cursor:pointer;transition:.15s;display:flex;gap:8px;align-items:center;
+}
+.chip i{font-style:normal;font-size:10px;color:var(--ink-soft)}
+.chip:hover{background:var(--paper-2)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.chip.on i{color:rgba(255,255,255,.65)}
+
+/* ============ 卡片网格 ============ */
+main{max-width:1280px;margin:0 auto;padding:36px 32px 90px}
+.result-line{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--ink-soft);
+  margin-bottom:22px;text-transform:uppercase;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.card{
+  border:2px solid var(--ink);background:var(--card);
+  padding:18px 18px 16px;cursor:pointer;position:relative;
+  display:flex;flex-direction:column;gap:12px;
+  transition:transform .18s cubic-bezier(.2,.9,.3,1),box-shadow .18s;
+  animation:card-in .5s cubic-bezier(.2,.9,.3,1) backwards;
+}
+@keyframes card-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--blue)}
+.card:hover .card-no{color:var(--red)}
+.card-top{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono)}
+.card-no{font-size:11px;letter-spacing:.1em;color:var(--ink-soft);transition:.15s}
+.card-cat{
+  font-size:10px;letter-spacing:.16em;border:1px solid var(--line-strong);
+  padding:3px 8px;color:var(--ink-soft);
+}
+.card h3{font-size:21px;font-weight:700;line-height:1.3}
+body.en .card h3{font-size:19px;line-height:1.25}
+.card .en{
+  font-family:var(--serif-en);font-style:italic;font-weight:400;
+  font-size:14px;color:var(--blue);margin-top:2px;
+}
+body.en .card .en{font-family:var(--serif-zh);font-style:normal}
+.card .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ink-soft)}
+.palette{display:flex;height:22px;border:1.5px solid var(--ink);overflow:hidden;margin-top:auto}
+.palette i{flex:1;transition:flex .25s}
+.card:hover .palette i:hover{flex:2.6}
+.card .tags{display:flex;gap:6px;flex-wrap:wrap}
+.card .tags span{
+  font-family:var(--mono);font-size:10px;color:var(--ink-soft);
+  border:1px dashed var(--line-strong);padding:2px 7px;
+}
+.empty{
+  grid-column:1/-1;text-align:center;padding:80px 0;color:var(--ink-soft);
+  font-family:var(--mono);font-size:13px;letter-spacing:.1em;
+}
+
+/* ============ 详情弹窗 ============ */
+.overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(25,21,18,.55);
+  display:none;align-items:flex-start;justify-content:center;
+  padding:5vh 20px;overflow-y:auto;backdrop-filter:blur(3px);
+}
+.overlay.open{display:flex}
+.dossier{
+  background:var(--card);border:3px solid var(--ink);max-width:880px;width:100%;
+  box-shadow:12px 12px 0 rgba(0,47,167,.9);position:relative;
+  animation:dossier-in .35s cubic-bezier(.2,1.1,.3,1) backwards;
+}
+@keyframes dossier-in{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}
+.dossier-head{
+  border-bottom:2px solid var(--ink);padding:22px 30px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:18px;
+  background:repeating-linear-gradient(-45deg,transparent,transparent 7px,rgba(25,21,18,.04) 7px,rgba(25,21,18,.04) 8px);
+}
+.dossier-head .no{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--red);font-weight:600}
+.dossier-head h2{font-size:clamp(26px,4vw,40px);font-weight:900;line-height:1.15;margin-top:6px}
+.dossier-head .en{font-family:var(--serif-en);font-style:italic;font-size:clamp(15px,2.2vw,21px);color:var(--blue);margin-top:4px}
+body.en .dossier-head .en{font-family:var(--serif-zh);font-style:normal}
+.btn-close{
+  border:2px solid var(--ink);background:transparent;cursor:pointer;flex-shrink:0;
+  width:40px;height:40px;font-size:18px;font-family:var(--mono);color:var(--ink);transition:.15s;
+}
+.btn-close:hover{background:var(--red);border-color:var(--red);color:var(--paper)}
+.dossier-body{display:grid;grid-template-columns:225px 1fr}
+@media(max-width:720px){.dossier-body{grid-template-columns:1fr}}
+.dossier-side{
+  border-right:2px solid var(--ink);padding:24px;
+  display:flex;flex-direction:column;gap:20px;background:var(--paper-2);
+}
+@media(max-width:720px){.dossier-side{border-right:none;border-bottom:2px solid var(--ink)}}
+.field label{
+  display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;
+  color:var(--ink-soft);text-transform:uppercase;margin-bottom:5px;
+}
+.field p{font-size:13.5px;font-weight:500}
+.swatches{display:flex;flex-direction:column;gap:6px}
+.swatch{
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+  border:none;background:none;padding:0;transition:.12s;
+}
+.swatch:hover{transform:translateX(3px);color:var(--ink)}
+.swatch i{width:34px;height:20px;border:1.5px solid var(--ink);flex-shrink:0}
+.dossier-main{padding:26px 30px;display:flex;flex-direction:column;gap:24px;min-width:0}
+.sec-title{
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-soft);
+  text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.sec-title::after{content:"";flex:1;height:1px;background:var(--line-strong)}
+.dossier-main .desc{font-size:14.5px;line-height:2}
+body.en .dossier-main .desc{line-height:1.8}
+.figures{display:flex;flex-direction:column;gap:6px}
+.figures li{
+  list-style:none;font-size:13.5px;padding-left:18px;position:relative;line-height:1.8;
+}
+.figures li::before{content:"※";position:absolute;left:0;color:var(--red);font-size:11px;top:4px}
+.trait-tags{display:flex;gap:7px;flex-wrap:wrap}
+.trait-tags button{
+  font-family:var(--mono);font-size:11.5px;border:1.5px solid var(--ink);
+  background:transparent;padding:5px 11px;cursor:pointer;color:var(--ink);transition:.13s;
+}
+.trait-tags button:hover{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.prompt-box{
+  border:2px solid var(--ink);background:var(--ink);color:#EDE6D6;
+  font-family:var(--mono);font-size:12.5px;line-height:1.9;padding:16px 18px;position:relative;
+}
+.prompt-box .ph{color:#F2B6A0}
+.btn-copy{
+  position:absolute;top:-2px;right:-2px;border:2px solid var(--ink);
+  background:var(--red);color:var(--paper);font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.12em;padding:7px 13px;cursor:pointer;transition:.15s;
+}
+.btn-copy:hover{background:var(--blue)}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;text-decoration:none;
+  border:1.5px solid var(--ink);color:var(--ink);padding:8px 13px;
+  display:flex;gap:7px;align-items:center;transition:.13s;background:var(--card);
+}
+.links a:hover{background:var(--ink);color:var(--paper);transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--red)}
+.links a::after{content:"↗";font-size:10px}
+
+/* ============ 页脚 ============ */
+footer{
+  border-top:3px solid var(--ink);padding:30px 32px;max-width:1280px;margin:0 auto;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-soft);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;line-height:2;
+}
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:12px;
+  letter-spacing:.1em;padding:12px 22px;z-index:200;transition:transform .3s cubic-bezier(.2,1.2,.3,1);
+  border:2px solid var(--ink);box-shadow:5px 5px 0 var(--red);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="head-top">
+      <span>EST. 2026 · INDEX OF VISUAL LANGUAGE</span>
+      <span class="stamp" id="stamp"></span>
+    </div>
+    <h1 id="title"></h1>
+    <div class="head-en" id="subtitle"></div>
+    <p class="head-desc" id="hdesc"></p>
+    <div class="head-stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="searchbox">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#191512" stroke-width="2"/><path d="M10.5 10.5L14 14" stroke="#191512" stroke-width="2"/></svg>
+      <input id="search" type="text" autocomplete="off">
+      <kbd>/</kbd>
+    </div>
+    <button class="btn-random" id="random"></button>
+    <button class="btn-lang" id="langbtn" title="切换语言 / Switch language"></button>
+  </div>
+  <div class="cats" id="cats"></div>
+</div>
+
+<main>
+  <div class="result-line"><span id="count"></span><span id="hint"></span></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <span id="foot1"></span>
+  <span id="foot2"></span>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="dossier" id="dossier" role="dialog" aria-modal="true"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   词条数据库 / ENTRY DATABASE
+   在 DATA 数组中按相同格式添加新词条即可 / add new entries below.
+   cat: hist 设计史 / art 美术流派 / designer 设计师
+        style 风格语汇 / type 平面与字体 / visual 色彩与材质
+   eraEn / regionEn 缺省时沿用 era / region。
+   ================================================================ */
+const CATS = {
+  hist:    {zh:"设计史",     en:"Design History"},
+  art:     {zh:"美术流派",   en:"Art Movements"},
+  designer:{zh:"设计师",     en:"Designers"},
+  style:   {zh:"风格语汇",   en:"Style Vocabulary"},
+  type:    {zh:"平面与字体", en:"Type & Layout"},
+  visual:  {zh:"色彩与材质", en:"Color & Material"}
+};
+
+const DATA = [
+/* ---------------- 设计史 hist ---------------- */
+{zh:"工艺美术运动",en:"Arts and Crafts Movement",cat:"hist",era:"1860–1910",region:"英国",regionEn:"UK",
+ desc:"由威廉·莫里斯发起，反抗工业化粗制滥造，主张回归手工艺、诚实材料与自然纹样，是现代设计运动的起点。",
+ descEn:"Launched by William Morris as a revolt against shoddy industrial mass production, championing honest craftsmanship, truthful materials and natural ornament — the starting point of the modern design movement.",
+ traits:["hand-crafted ornament","botanical wallpaper pattern","medieval revival","woodcut illustration","earthy natural dyes"],
+ figures:["威廉·莫里斯 William Morris — 《红屋》、Kelmscott 出版社","约翰·拉斯金 John Ruskin — 理论奠基《建筑的七盏明灯》"],
+ figuresEn:["William Morris — Red House, the Kelmscott Press","John Ruskin — theorist, The Seven Lamps of Architecture"],
+ palette:["#5B6E3F","#8A3324","#C9A66B","#2F2A24"]},
+{zh:"新艺术运动",en:"Art Nouveau",cat:"hist",era:"1890–1910",region:"法国 / 比利时",regionEn:"France / Belgium",
+ desc:"以流动的「鞭线」曲线、花卉藤蔓与女性形象为标志，渗透海报、建筑、玻璃与首饰，追求艺术与生活的总体融合。",
+ descEn:"Defined by flowing 'whiplash' curves, botanical vines and idealized female figures, it swept across posters, architecture, glass and jewellery in pursuit of a total fusion of art and life.",
+ traits:["flowing whiplash curves","ornamental floral motifs","elegant female figures","stained glass","gilded linework"],
+ figures:["阿尔丰斯·穆夏 Alphonse Mucha — 萨拉·伯恩哈特海报","赫克托·吉马尔 Hector Guimard — 巴黎地铁入口","埃米尔·加莱 Émile Gallé — 玻璃工艺"],
+ figuresEn:["Alphonse Mucha — Sarah Bernhardt posters","Hector Guimard — Paris Métro entrances","Émile Gallé — art glass"],
+ palette:["#A8893C","#7A8B6F","#D9A5B3","#3E2F2A"]},
+{zh:"维也纳分离派",en:"Vienna Secession",cat:"hist",era:"1897–1905",region:"奥地利",regionEn:"Austria",
+ desc:"克里姆特等人脱离学院派而创立，将新艺术的曲线转向几何化装饰，方格纹样与金箔运用影响深远。「为时代的艺术，为艺术的自由」。",
+ descEn:"Founded by Klimt and colleagues breaking from the academy, it bent Art Nouveau's curves toward geometric ornament — checkerboard motifs and gold leaf. 'To every age its art, to art its freedom.'",
+ traits:["geometric ornament","gold leaf decoration","checkerboard motifs","flat decorative figures","symbolist elegance"],
+ figures:["古斯塔夫·克里姆特 Gustav Klimt — 《吻》","科罗曼·莫塞尔 Koloman Moser — 平面与工艺","约瑟夫·霍夫曼 Josef Hoffmann — 维也纳工坊"],
+ figuresEn:["Gustav Klimt — The Kiss","Koloman Moser — graphics and craft","Josef Hoffmann — the Wiener Werkstätte"],
+ palette:["#C5A028","#1A1A1A","#E8E0CE","#7C8C92"]},
+{zh:"德意志制造联盟",en:"Deutscher Werkbund",cat:"hist",era:"1907–1934",region:"德国",regionEn:"Germany",
+ desc:"艺术家与企业联手推动工业标准化与优质量产，贝伦斯为 AEG 所做的整体设计被视为现代企业形象（CI）的开端。",
+ descEn:"An alliance of artists and industry promoting standardization and quality mass production; Behrens' total design for AEG is regarded as the birth of modern corporate identity.",
+ traits:["industrial standardization","early corporate identity","functional product design","rational sans-serif lettering"],
+ figures:["彼得·贝伦斯 Peter Behrens — AEG 电水壶与商标","赫尔曼·穆特修斯 Hermann Muthesius — 标准化论战"],
+ figuresEn:["Peter Behrens — AEG kettle and trademark","Hermann Muthesius — the standardization debate"],
+ palette:["#37424A","#9C9588","#C8C2B4","#191512"]},
+{zh:"装饰艺术",en:"Art Deco",cat:"hist",era:"1920–1939",region:"法国 / 美国",regionEn:"France / USA",
+ desc:"机器时代的奢华美学：放射状日出纹、锯齿与阶梯造型、金黑撞色，盛行于摩天楼、海报与首饰，象征爵士时代的乐观。",
+ descEn:"The machine-age language of luxury: sunburst rays, zigzags and stepped ziggurats in gold and black, gracing skyscrapers, posters and jewellery — the optimism of the Jazz Age.",
+ traits:["geometric luxury","sunburst motifs","stepped ziggurat forms","gold and black","streamlined symmetry","jazz age glamour"],
+ figures:["卡桑德尔 A.M. Cassandre — 《Normandie》海报","塔玛拉·德·蓝碧嘉 Tamara de Lempicka — 装饰肖像","克莱斯勒大厦 Chrysler Building"],
+ figuresEn:["A.M. Cassandre — the Normandie poster","Tamara de Lempicka — deco portraits","The Chrysler Building"],
+ palette:["#C9A227","#101820","#3E6257","#9E3B2C"]},
+{zh:"包豪斯",en:"Bauhaus",cat:"hist",era:"1919–1933",region:"德国",regionEn:"Germany",
+ desc:"格罗皮乌斯创立的设计学校，主张艺术与技术新统一：几何基本形、三原色、无衬线字体与非对称构图，奠定现代设计教育体系。",
+ descEn:"Gropius' school proclaimed a new unity of art and technology: elemental geometry, primary colors, sans-serif type and asymmetric composition — the foundation of modern design education.",
+ traits:["geometric primary shapes","red yellow blue","asymmetric grid composition","sans-serif typography","form follows function"],
+ figures:["瓦尔特·格罗皮乌斯 Walter Gropius — 德绍校舍","拉斯洛·莫霍利-纳吉 László Moholy-Nagy — 摄影构成","赫伯特·拜耶 Herbert Bayer — Universal 字体","马塞尔·布劳耶 Marcel Breuer — 瓦西里椅"],
+ figuresEn:["Walter Gropius — the Dessau building","László Moholy-Nagy — photographic constructions","Herbert Bayer — Universal typeface","Marcel Breuer — Wassily chair"],
+ palette:["#D02E26","#F2B705","#1F5CA9","#191512"]},
+{zh:"流线型现代",en:"Streamline Moderne",cat:"hist",era:"1930s–1940s",region:"美国",regionEn:"USA",
+ desc:"装饰艺术的晚期变体，受空气动力学启发：圆润的流线外壳、水平速度线与铬合金光泽，从火车头蔓延到吸尘器与建筑。",
+ descEn:"A late offshoot of Art Deco inspired by aerodynamics: rounded streamlined shells, horizontal speed lines and chrome sheen, spreading from locomotives to vacuum cleaners and buildings.",
+ traits:["aerodynamic curves","chrome trim","horizontal speed lines","rounded corners","machine age optimism"],
+ figures:["雷蒙德·罗维 Raymond Loewy — 灰狗巴士、可乐贩卖机","亨利·德雷夫斯 Henry Dreyfuss — 20世纪特快列车"],
+ figuresEn:["Raymond Loewy — Greyhound buses, Coke vending machines","Henry Dreyfuss — the 20th Century Limited locomotive"],
+ palette:["#B8BCBE","#27506B","#E2DCC8","#8E2F22"]},
+{zh:"瑞士国际主义风格",en:"International Typographic Style",cat:"hist",era:"1950s–1970s",region:"瑞士",regionEn:"Switzerland",
+ desc:"以数学网格、客观摄影与 Helvetica 为核心的理性平面体系，追求清晰、中立、秩序，至今仍是版式设计的通用语法。",
+ descEn:"A rational graphic system built on mathematical grids, objective photography and Helvetica — clear, neutral and ordered; still the universal grammar of layout design today.",
+ traits:["mathematical grid system","helvetica typography","objective photography","flat color planes","asymmetric layout","white space"],
+ figures:["约瑟夫·米勒-布罗克曼 Josef Müller-Brockmann — 音乐厅海报","阿明·霍夫曼 Armin Hofmann — 巴塞尔学派","马克斯·比尔 Max Bill — 具体艺术"],
+ figuresEn:["Josef Müller-Brockmann — Tonhalle concert posters","Armin Hofmann — the Basel school","Max Bill — concrete art"],
+ palette:["#E8442E","#191512","#F2EEE3","#1F5CA9"]},
+{zh:"战后日本设计",en:"Postwar Japanese Graphic Design",cat:"hist",era:"1950s–1980s",region:"日本",regionEn:"Japan",
+ desc:"将西方现代主义与日本传统美学（家纹、留白、浮世绘色彩）融合，以东京奥运视觉与剧场海报闻名，确立了日本平面的世界地位。",
+ descEn:"Fused Western modernism with Japanese tradition — family crests, emptiness, ukiyo-e color — rising to world prominence through the Tokyo Olympic graphics and theatre posters.",
+ traits:["refined negative space","rising sun geometry","flat color planes","japanese pattern motifs","poster culture"],
+ figures:["龟仓雄策 Yusaku Kamekura — 1964 东京奥运海报","田中一光 Ikko Tanaka — 《日本舞踊》","早川良雄、永井一正 等"],
+ figuresEn:["Yusaku Kamekura — Tokyo 1964 Olympic posters","Ikko Tanaka — Nihon Buyo","Yoshio Hayakawa, Kazumasa Nagai et al."],
+ palette:["#C0282D","#F2EEE3","#1A1A1A","#9A7B4F"]},
+{zh:"后现代主义设计",en:"Postmodern Design",cat:"hist",era:"1970s–1990s",region:"欧美",regionEn:"Europe & USA",
+ desc:"对现代主义「少即是多」的反叛：戏谑、拼贴、历史符号混用与高饱和撞色，宣称「少即是乏味」。",
+ descEn:"A revolt against modernist 'less is more': playful pastiche, clashing saturated colors and freely mixed historical quotation — declaring that less is a bore.",
+ traits:["playful pastiche","clashing colors","historical quotation","anti-grid layout","ironic ornament"],
+ figures:["罗伯特·文丘里 Robert Venturi — 《建筑的复杂性与矛盾性》","迈克尔·格雷夫斯 Michael Graves — Alessi 水壶","沃尔夫冈·魏因加特 Wolfgang Weingart — 新浪潮版式"],
+ figuresEn:["Robert Venturi — Complexity and Contradiction in Architecture","Michael Graves — the Alessi kettle","Wolfgang Weingart — New Wave typography"],
+ palette:["#E84A8A","#2BB3A3","#F2B705","#5B4B9E"]},
+{zh:"孟菲斯设计",en:"Memphis Design",cat:"hist",era:"1981–1987",region:"意大利",regionEn:"Italy",
+ desc:"索特萨斯领衔的米兰设计团体：水磨石纹、波浪线、糖果色与几何积木式家具，反功能主义的狂欢，至今仍是流行视觉母题。",
+ descEn:"Sottsass' Milan collective: terrazzo patterns, squiggles, candy colors and toy-block furniture — an anti-functionalist carnival whose motifs still saturate pop visuals today.",
+ traits:["terrazzo pattern","squiggles and zigzags","clashing pastel and primary colors","playful geometric blocks","1980s pop"],
+ figures:["埃托雷·索特萨斯 Ettore Sottsass — Carlton 书架","娜塔莉·杜·帕斯奎尔 Nathalie du Pasquier — 织物图案","米歇尔·德·卢基 Michele De Lucchi"],
+ figuresEn:["Ettore Sottsass — the Carlton bookcase","Nathalie du Pasquier — textile patterns","Michele De Lucchi"],
+ palette:["#F25CA2","#28C3D4","#F2B705","#191512","#E8E0CE"]},
+{zh:"解构主义",en:"Deconstructivism",cat:"hist",era:"1980s–2000s",region:"欧美",regionEn:"Europe & USA",
+ desc:"打破稳定与秩序：破碎的体块、倾斜与穿插、失控的文字排印。建筑上的盖里与哈迪德，平面上的卡森皆属此脉。",
+ descEn:"Order broken on purpose: fragmented volumes, tilted intersections and typography pushed past legibility — Gehry and Hadid in building, Carson on the page.",
+ traits:["fragmented forms","distorted typography","chaotic layering","tilted intersecting planes","controlled disorder"],
+ figures:["弗兰克·盖里 Frank Gehry — 毕尔巴鄂古根海姆","扎哈·哈迪德 Zaha Hadid — 早期解构绘画","凯瑟琳·麦考伊 Katherine McCoy — 克兰布鲁克学派"],
+ figuresEn:["Frank Gehry — Guggenheim Bilbao","Zaha Hadid — early deconstructivist paintings","Katherine McCoy — the Cranbrook school"],
+ palette:["#8C8C8C","#191512","#D93A1E","#E8E0CE"]},
+{zh:"极简主义设计",en:"Minimalist Design",cat:"hist",era:"1960s 至今",eraEn:"1960s–present",region:"全球",regionEn:"Global",
+ desc:"以最少的形与色传达本质：大量留白、单色或低饱和、克制的字体层级。从拉姆斯的「少，却更好」到原研哉的「空」。",
+ descEn:"Conveying essence with the least form and color: generous white space, monochrome restraint and quiet typographic hierarchy — from Rams' 'less but better' to Hara's 'emptiness'.",
+ traits:["generous negative space","monochrome palette","restrained typography","essential forms only","quiet precision"],
+ figures:["迪特·拉姆斯 Dieter Rams — 设计十诫","原研哉 Kenya Hara — MUJI","约翰·保森 John Pawson — 极简建筑"],
+ figuresEn:["Dieter Rams — ten principles of good design","Kenya Hara — MUJI","John Pawson — minimalist architecture"],
+ palette:["#F2EEE3","#D8D2C4","#8C8678","#191512"]},
+{zh:"千禧美学 Y2K",en:"Y2K Aesthetic",cat:"hist",era:"1997–2004",region:"全球",regionEn:"Global",
+ desc:"千禧之交的科技乐观主义：液态金属、半透明糖果塑料（iMac G3）、镭射光泽与圆润未来感界面，近年强势回潮。",
+ descEn:"Turn-of-millennium tech optimism: liquid metal, translucent candy plastics (the iMac G3), lens flares and rounded futuristic interfaces — now back in full force.",
+ traits:["liquid chrome blobs","translucent candy plastic","glossy gradients","lens flare","cyber optimism","bubble interface"],
+ figures:["乔纳森·艾维 Jony Ive — iMac G3 半透明机身","《黑客帝国》视觉","早期 Web / WinAmp 界面文化"],
+ figuresEn:["Jony Ive — the translucent iMac G3","The Matrix visual culture","Early web / WinAmp interface culture"],
+ palette:["#9FD8E8","#C8C8D4","#F2A2C4","#5B6EE8"]},
+
+/* ---------------- 美术流派 art ---------------- */
+{zh:"哥特艺术",en:"Gothic Art",cat:"art",era:"12–16世纪",eraEn:"12th–16th c.",region:"欧洲",regionEn:"Europe",
+ desc:"垂直向上的尖拱、飞扶壁与彩色玻璃花窗，营造接近神性的光与高度；其字体（哥特体）与暗黑情绪持续滋养当代设计。",
+ descEn:"Pointed arches, flying buttresses and stained glass reach toward divine light and height; its blackletter type and dark moods still nourish contemporary design.",
+ traits:["pointed arches","stained glass light","vertical grandeur","blackletter typography","dark ornate atmosphere"],
+ figures:["巴黎圣母院、沙特尔大教堂","中世纪手抄本 Illuminated Manuscripts"],
+ figuresEn:["Notre-Dame de Paris, Chartres Cathedral","Medieval illuminated manuscripts"],
+ palette:["#26324E","#7A1F2B","#C5A028","#191512"]},
+{zh:"巴洛克",en:"Baroque",cat:"art",era:"1600–1750",region:"欧洲",regionEn:"Europe",
+ desc:"强烈的明暗对比（chiaroscuro）、动感的对角线构图与繁复金饰，戏剧性与情感张力的极致，常被借用于奢华与古典命题。",
+ descEn:"Extreme drama: chiaroscuro lighting, surging diagonal compositions and lavish gold ornament — the go-to language for luxury and the classical sublime.",
+ traits:["dramatic chiaroscuro lighting","ornate gold detail","dynamic diagonal composition","rich velvet tones","theatrical grandeur"],
+ figures:["卡拉瓦乔 Caravaggio — 明暗法","鲁本斯 Rubens — 动态群像","贝尼尼 Bernini — 雕塑与广场"],
+ figuresEn:["Caravaggio — chiaroscuro","Rubens — dynamic group scenes","Bernini — sculpture and piazzas"],
+ palette:["#3B2716","#8A6420","#7A1F2B","#0E0C0A"]},
+{zh:"洛可可",en:"Rococo",cat:"art",era:"1730–1770",region:"法国",regionEn:"France",
+ desc:"巴洛克的轻盈化：贝壳卷草纹、粉彩色调与享乐场景，纤巧妩媚，是「法式优雅」与甜美装饰的原型。",
+ descEn:"Baroque made weightless: shell scrolls, pastel tints and scenes of pleasure — delicate and flirtatious, the prototype of 'French elegance' and sweet ornament.",
+ traits:["pastel palette","ornate shell curves","playful elegance","gilded boiserie","soft romantic scenes"],
+ figures:["弗拉戈纳尔 Fragonard — 《秋千》","布歇 Boucher — 宫廷绘画","凡尔赛小特里亚农宫"],
+ figuresEn:["Fragonard — The Swing","Boucher — court painting","The Petit Trianon, Versailles"],
+ palette:["#E8C4CE","#BFD4C8","#D9C28F","#F2EAD8"]},
+{zh:"浮世绘",en:"Ukiyo-e",cat:"art",era:"17–19世纪",eraEn:"17th–19th c.",region:"日本",regionEn:"Japan",
+ desc:"江户市井的木版画：平涂色块、有力的轮廓线、大胆裁切构图。曾深刻影响印象派与新艺术，是东方平面美学的源头之一。",
+ descEn:"Woodblock prints of Edo's floating world: flat color, muscular outlines and daring crops. It shaped Impressionism and Art Nouveau — a wellspring of Eastern graphic aesthetics.",
+ traits:["flat woodblock printing","bold ink outlines","wave and cloud patterns","cropped asymmetric composition","indigo and vermilion"],
+ figures:["葛饰北斋 Hokusai — 《神奈川冲浪里》","歌川广重 Hiroshige — 《东海道五十三次》","喜多川歌麿 Utamaro — 美人绘"],
+ figuresEn:["Hokusai — The Great Wave off Kanagawa","Hiroshige — Fifty-three Stations of the Tōkaidō","Utamaro — portraits of beauties"],
+ palette:["#26456E","#E8E0CE","#C0282D","#3E2F2A"]},
+{zh:"印象派",en:"Impressionism",cat:"art",era:"1870s–1880s",region:"法国",regionEn:"France",
+ desc:"走出画室捕捉瞬时光色：松动可见的笔触、户外明亮色调与日常题材，开启现代艺术之门。",
+ descEn:"Painting fled the studio to catch fleeting light: loose visible strokes, bright open-air color and everyday subjects — the gateway to modern art.",
+ traits:["visible loose brushstrokes","plein air natural light","soft shimmering edges","everyday scenes","pastel luminosity"],
+ figures:["克劳德·莫奈 Monet — 《睡莲》《日出·印象》","雷诺阿 Renoir、德加 Degas"],
+ figuresEn:["Claude Monet — Water Lilies, Impression: Sunrise","Renoir, Degas"],
+ palette:["#A3BFD9","#D9C9A3","#7A9B7E","#E8D4C4"]},
+{zh:"后印象派",en:"Post-Impressionism",cat:"art",era:"1885–1905",region:"法国",regionEn:"France",
+ desc:"在印象派基础上转向主观表达：梵高的漩涡笔触、塞尚的几何结构、高更的象征色彩，直接孕育了现代主义诸流派。",
+ descEn:"Beyond optics toward subjective expression: Van Gogh's swirling strokes, Cézanne's geometry, Gauguin's symbolic color — the direct seedbed of the modernist movements.",
+ traits:["expressive swirling brushwork","bold complementary colors","structured geometric forms","emotional intensity"],
+ figures:["文森特·梵高 Van Gogh — 《星夜》","保罗·塞尚 Cézanne — 圣维克多山","保罗·高更 Gauguin — 塔希提"],
+ figuresEn:["Vincent van Gogh — The Starry Night","Paul Cézanne — Mont Sainte-Victoire","Paul Gauguin — Tahiti"],
+ palette:["#2B4C8C","#E8B81E","#3E7A4E","#C45A28"]},
+{zh:"野兽派",en:"Fauvism",cat:"art",era:"1905–1910",region:"法国",regionEn:"France",
+ desc:"色彩从描摹中解放：高饱和原色平涂、粗放笔法，「颜色就是炸药」。适合表达热烈、原始、欢快的视觉命题。",
+ descEn:"Color set free from description: saturated primaries laid flat with wild brushwork — 'color as dynamite.' Perfect for heat, joy and primitive energy.",
+ traits:["wild saturated color","bold flat brushwork","non-naturalistic palette","joyful primitive energy"],
+ figures:["亨利·马蒂斯 Henri Matisse — 《舞蹈》、晚年剪纸","安德烈·德兰 André Derain — 伦敦系列"],
+ figuresEn:["Henri Matisse — Dance, the late cut-outs","André Derain — London series"],
+ palette:["#E8442E","#2BB35A","#F2B705","#1F5CA9"]},
+{zh:"表现主义",en:"Expressionism",cat:"art",era:"1905–1930s",region:"德国",regionEn:"Germany",
+ desc:"以扭曲的造型与刺目的色彩外化内心焦虑，木刻般的硬朗黑白尤具力量，影响海报、版画与电影美术（《卡里加里博士》）。",
+ descEn:"Inner anxiety made visible through distorted form and strident color; its woodcut-hard black and white empowered posters, prints and film design (Dr. Caligari).",
+ traits:["distorted angular forms","emotional intensity","stark woodcut black and white","jagged expressive lines","psychological tension"],
+ figures:["爱德华·蒙克 Munch — 《呐喊》","桥社 Die Brücke、青骑士 Der Blaue Reiter","《卡里加里博士的小屋》布景"],
+ figuresEn:["Edvard Munch — The Scream","Die Brücke, Der Blaue Reiter","The Cabinet of Dr. Caligari set design"],
+ palette:["#191512","#D93A1E","#E8E0CE","#26456E"]},
+{zh:"立体主义",en:"Cubism",cat:"art",era:"1907–1920s",region:"法国",regionEn:"France",
+ desc:"将对象拆解为多视点的几何碎片再重组于同一画面，土色调与拼贴手法，是抽象艺术与现代构成的关键转折。",
+ descEn:"Objects shattered into multi-viewpoint geometric facets and reassembled on one plane, in earth tones and collage — the pivotal turn toward abstraction and modern composition.",
+ traits:["fragmented geometric planes","multiple simultaneous perspectives","muted earth tones","collage elements","analytical abstraction"],
+ figures:["巴勃罗·毕加索 Picasso — 《亚维农少女》","乔治·布拉克 Braque — 分析立体主义"],
+ figuresEn:["Pablo Picasso — Les Demoiselles d'Avignon","Georges Braque — Analytic Cubism"],
+ palette:["#8C7A5B","#5B5347","#C4B59B","#3E3A32"]},
+{zh:"未来主义",en:"Futurism",cat:"art",era:"1909–1944",region:"意大利",regionEn:"Italy",
+ desc:"歌颂速度、机器与城市喧嚣：放射状动势线、重复残影与倾斜构图，其文字排版实验（自由文字）影响深远。",
+ descEn:"A hymn to speed, machines and urban noise: radiating force-lines, repeated after-images and aggressive diagonals; its 'words-in-freedom' typography ran deep.",
+ traits:["dynamic motion lines","mechanical energy","repeated motion blur","aggressive diagonals","speed and noise"],
+ figures:["翁贝托·薄邱尼 Boccioni — 《空间中连续性的形体》","贾科莫·巴拉 Balla — 速度研究","马里内蒂 Marinetti — 自由文字排版"],
+ figuresEn:["Umberto Boccioni — Unique Forms of Continuity in Space","Giacomo Balla — studies of speed","Marinetti — parole in libertà"],
+ palette:["#B8321E","#37424A","#C4B59B","#191512"]},
+{zh:"达达主义",en:"Dada",cat:"art",era:"1916–1924",region:"瑞士 / 德国",regionEn:"Switzerland / Germany",
+ desc:"一战废墟上的反艺术运动：荒诞拼贴、现成品、剪贴报纸式的「勒索信」排版，是朋克与实验平面的精神祖先。",
+ descEn:"Anti-art rising from the rubble of WWI: absurd photomontage, readymades and ransom-note typography — the spiritual ancestor of punk and experimental graphics.",
+ traits:["absurd photomontage","ransom note typography","anti-art collage","chaotic composition","found object assemblage"],
+ figures:["马塞尔·杜尚 Duchamp — 《泉》","汉娜·赫希 Hannah Höch — 照片拼贴","库尔特·施维特斯 Kurt Schwitters — Merz"],
+ figuresEn:["Marcel Duchamp — Fountain","Hannah Höch — photomontage","Kurt Schwitters — Merz"],
+ palette:["#E8E0CE","#191512","#D93A1E","#8C8678"]},
+{zh:"构成主义",en:"Constructivism",cat:"art",era:"1915–1930s",region:"俄国",regionEn:"Russia",
+ desc:"为革命服务的艺术工程：红黑双色、强对角线、照片蒙太奇与几何构成，宣传海报的力量感至今被反复引用。",
+ descEn:"Art as engineering for the revolution: red and black, hard diagonals, photomontage and geometric construction — propaganda posters whose force is still quoted today.",
+ traits:["red and black diagonal composition","photomontage","bold geometric shapes","propaganda poster energy","constructed abstraction"],
+ figures:["埃尔·利西茨基 El Lissitzky — 《红楔攻打白军》","亚历山大·罗德琴科 Rodchenko — 海报与摄影","塔特林 Tatlin — 第三国际纪念塔"],
+ figuresEn:["El Lissitzky — Beat the Whites with the Red Wedge","Alexander Rodchenko — posters and photography","Tatlin — Monument to the Third International"],
+ palette:["#D02E26","#191512","#E8E0CE","#8C8678"]},
+{zh:"至上主义",en:"Suprematism",cat:"art",era:"1915–1925",region:"俄国",regionEn:"Russia",
+ desc:"马列维奇把绘画推至纯粹感觉的零度：白色虚空中漂浮的方块与十字，是几何抽象最激进的表达。",
+ descEn:"Malevich pushed painting to the zero degree of pure feeling: squares and crosses adrift in a white void — geometric abstraction at its most radical.",
+ traits:["floating geometric forms","white void background","pure abstraction","black square","weightless composition"],
+ figures:["卡济米尔·马列维奇 Malevich — 《黑方块》《白上白》"],
+ figuresEn:["Kazimir Malevich — Black Square, White on White"],
+ palette:["#F2EEE3","#191512","#D02E26","#E8B81E"]},
+{zh:"风格派",en:"De Stijl",cat:"art",era:"1917–1931",region:"荷兰",regionEn:"Netherlands",
+ desc:"以水平垂直黑线与三原色矩形追求宇宙的普遍和谐，蒙德里安的画与里特维尔德的红蓝椅是其最纯粹的化身。",
+ descEn:"Universal harmony sought through horizontals, verticals and primary-color rectangles; Mondrian's canvases and Rietveld's Red and Blue Chair are its purest embodiments.",
+ traits:["primary color rectangles","black orthogonal grid lines","pure geometric abstraction","asymmetric balance"],
+ figures:["皮特·蒙德里安 Mondrian — 《红黄蓝构成》","特奥·凡·杜斯堡 van Doesburg","赫里特·里特维尔德 Rietveld — 红蓝椅、施罗德住宅"],
+ figuresEn:["Piet Mondrian — Composition with Red, Yellow and Blue","Theo van Doesburg","Gerrit Rietveld — Red and Blue Chair, Schröder House"],
+ palette:["#D02E26","#F2B705","#1F5CA9","#F2EEE3","#191512"]},
+{zh:"超现实主义",en:"Surrealism",cat:"art",era:"1924–1950s",region:"法国",regionEn:"France",
+ desc:"潜意识与梦境的视觉化：熔化的钟表、悬浮的物体、违和并置的场景。是广告创意与概念摄影最常借用的语法。",
+ descEn:"Dreams and the unconscious made visible: melting clocks, levitating objects, impossible juxtapositions — the grammar most borrowed by advertising and conceptual photography.",
+ traits:["dreamlike juxtaposition","melting distorted objects","uncanny floating elements","vast empty landscapes","subconscious imagery"],
+ figures:["萨尔瓦多·达利 Dalí — 《记忆的永恒》","勒内·马格利特 Magritte — 《形象的叛逆》","曼·雷 Man Ray — 实验摄影"],
+ figuresEn:["Salvador Dalí — The Persistence of Memory","René Magritte — The Treachery of Images","Man Ray — experimental photography"],
+ palette:["#C4A35A","#6E8CA8","#3E2F2A","#E8DCC4"]},
+{zh:"抽象表现主义",en:"Abstract Expressionism",cat:"art",era:"1943–1960s",region:"美国",regionEn:"USA",
+ desc:"画布成为行动的场域：波洛克的滴洒、罗斯科的色域沉思。巨大尺幅与纯粹情绪，常用于表达自由、能量与崇高。",
+ descEn:"The canvas as arena: Pollock's drips, Rothko's color-field meditations — monumental scale and raw emotion for themes of freedom, energy and the sublime.",
+ traits:["gestural paint drips","color field blocks","monumental canvas scale","raw emotional energy","action painting"],
+ figures:["杰克逊·波洛克 Pollock — 滴画","马克·罗斯科 Rothko — 色域绘画","威廉·德·库宁 de Kooning"],
+ figuresEn:["Jackson Pollock — drip paintings","Mark Rothko — color fields","Willem de Kooning"],
+ palette:["#8A2B1E","#D9A03E","#37424A","#E8E0CE"]},
+{zh:"波普艺术",en:"Pop Art",cat:"art",era:"1955–1970s",region:"英国 / 美国",regionEn:"UK / USA",
+ desc:"把消费社会的罐头、明星与漫画搬进美术馆：丝网印刷的重复、半调网点与艳俗撞色，雅俗界限就此瓦解。",
+ descEn:"Soup cans, stars and comics marched into the museum: screen-print repetition, halftone dots and brash color dissolved the line between high and low.",
+ traits:["comic halftone dots","screen print repetition","consumer culture icons","bold flat saturated colors","speech bubbles"],
+ figures:["安迪·沃霍尔 Warhol — 金宝汤罐头、玛丽莲","罗伊·利希滕斯坦 Lichtenstein — 漫画放大","理查德·汉密尔顿 Hamilton"],
+ figuresEn:["Andy Warhol — Campbell's Soup Cans, Marilyn","Roy Lichtenstein — enlarged comics","Richard Hamilton"],
+ palette:["#E8442E","#F2B705","#2BB3D4","#F25CA2","#191512"]},
+{zh:"欧普艺术",en:"Op Art",cat:"art",era:"1960s",region:"欧美",regionEn:"Europe & USA",
+ desc:"利用精密几何与黑白对比制造视错觉：振动的条纹、扭曲的网格与莫尔纹，眩晕感本身即是作品。",
+ descEn:"Precision geometry engineered for the eye to misread: vibrating stripes, warped grids and moiré patterns — the dizziness itself is the work.",
+ traits:["optical illusion patterns","vibrating moiré stripes","black and white geometry","warped grids","kinetic visual effects"],
+ figures:["布里奇特·赖利 Bridget Riley — 波纹绘画","维克托·瓦萨雷里 Vasarely — 视错觉构成"],
+ figuresEn:["Bridget Riley — wave paintings","Victor Vasarely — optical compositions"],
+ palette:["#191512","#F2EEE3","#5B6EE8","#8C8678"]},
+
+/* ---------------- 设计师 designer ---------------- */
+{zh:"扬·奇肖尔德",en:"Jan Tschichold",cat:"designer",era:"1902–1974",region:"德国 / 瑞士",regionEn:"Germany / Switzerland",
+ desc:"《新文字排印》确立了非对称排版与无衬线体的现代规范，晚年又回归古典，为企鹅图书制定排印细则，一人横跨两种范式。",
+ descEn:"Die neue Typographie codified asymmetric layout and sans-serif modernism; he later returned to classicism and wrote Penguin's composition rules — one man spanning both paradigms.",
+ traits:["new typography","asymmetric layout","precise typographic rules","penguin books composition","modernist restraint"],
+ figures:["《Die neue Typographie》(1928)","企鹅图书排印规范 Penguin Composition Rules","Sabon 字体"],
+ figuresEn:["Die neue Typographie (1928)","The Penguin Composition Rules","Sabon typeface"],
+ palette:["#E8E0CE","#191512","#D93A1E","#8C8678"]},
+{zh:"约瑟夫·米勒-布罗克曼",en:"Josef Müller-Brockmann",cat:"designer",era:"1914–1996",region:"瑞士",regionEn:"Switzerland",
+ desc:"瑞士国际主义旗手，苏黎世音乐厅系列海报以几何节奏对应音乐结构，其《平面设计中的网格系统》是版式圣经。",
+ descEn:"Standard-bearer of the Swiss Style; his Zurich Tonhalle posters translate musical structure into geometric rhythm, and his Grid Systems in Graphic Design remains the layout bible.",
+ traits:["swiss grid system","concert poster geometry","akzidenz grotesk typography","rhythmic abstract shapes","mathematical precision"],
+ figures:["苏黎世音乐厅 Musica Viva 海报系列","《Grid Systems in Graphic Design》","瑞士汽车俱乐部交通安全海报"],
+ figuresEn:["Musica Viva poster series, Zurich Tonhalle","Grid Systems in Graphic Design","Swiss Automobile Club road-safety posters"],
+ palette:["#191512","#F2EEE3","#D02E26","#1F5CA9"]},
+{zh:"保罗·兰德",en:"Paul Rand",cat:"designer",era:"1914–1996",region:"美国",regionEn:"USA",
+ desc:"美国现代平面设计之父，将欧洲现代主义转译为商业语言：IBM、ABC、UPS、NeXT 的标志皆出其手，幽默与简洁并存。",
+ descEn:"Father of American graphic modernism, translating the European avant-garde into commercial wit: IBM, ABC, UPS and NeXT all bear his hand — humor and economy in one.",
+ traits:["playful modernist logos","bold simple shapes","wit and humor in design","corporate identity systems","cut paper collage"],
+ figures:["IBM 八线条纹标志与 Eye-Bee-M 海报","ABC、UPS、Westinghouse、NeXT 标志","《Thoughts on Design》"],
+ figuresEn:["The IBM eight-bar logo and Eye-Bee-M poster","ABC, UPS, Westinghouse, NeXT logos","Thoughts on Design"],
+ palette:["#1F5CA9","#E8442E","#F2B705","#191512"]},
+{zh:"索尔·巴斯",en:"Saul Bass",cat:"designer",era:"1920–1996",region:"美国",regionEn:"USA",
+ desc:"电影片头设计的开创者：剪纸式的不规则色块与符号化图形，让《金臂人》《惊魂记》的片头本身成为艺术。",
+ descEn:"Inventor of the modern film title: cut-paper shapes and symbolic figures that made the openings of The Man with the Golden Arm and Psycho works of art in themselves.",
+ traits:["cut paper shapes","kinetic film title design","symbolic minimal figures","jagged expressive silhouettes","midcentury color"],
+ figures:["《金臂人》《惊魂记》《迷魂记》片头","AT&T、联合航空、贝尔系统标志"],
+ figuresEn:["Title sequences for The Man with the Golden Arm, Psycho, Vertigo","Logos for AT&T, United Airlines, Bell System"],
+ palette:["#E8442E","#191512","#F2EEE3","#E8B81E"]},
+{zh:"米尔顿·格拉泽",en:"Milton Glaser",cat:"designer",era:"1929–2020",region:"美国",regionEn:"USA",
+ desc:"纽约 Push Pin 工作室核心，反瑞士式的插画化设计：迪伦的彩虹头发海报与 I❤NY 成为 20 世纪最具流传度的图像。",
+ descEn:"Core of New York's Push Pin Studios, an illustrative riposte to Swiss rationalism: the rainbow-haired Dylan poster and I❤NY are among the century's most circulated images.",
+ traits:["psychedelic flowing color","illustrative poster design","eclectic historic styles","bold contour line illustration"],
+ figures:["Bob Dylan 剪影海报 (1966)","I ❤ NY 标志","Push Pin Studios 风格月刊"],
+ figuresEn:["The Bob Dylan silhouette poster (1966)","The I ❤ NY logo","The Push Pin Studios monthly"],
+ palette:["#F25CA2","#F2B705","#2BB3A3","#191512"]},
+{zh:"马西莫·维涅里",en:"Massimo Vignelli",cat:"designer",era:"1931–2014",region:"意大利 / 美国",regionEn:"Italy / USA",
+ desc:"「设计是一，不是多」：纽约地铁标识与 1972 地铁图、美国航空形象，毕生只用少数几款字体，秩序与永恒的信徒。",
+ descEn:"'Design is one' — the NYC Subway signage and 1972 diagram, the American Airlines identity; a lifetime spent on a handful of typefaces, a believer in order and permanence.",
+ traits:["helvetica purism","transit signage system","diagrammatic subway map","strict modernist grid","timeless restraint"],
+ figures:["纽约地铁标识系统与 1972 路线图","American Airlines 形象 (1967)","《The Vignelli Canon》"],
+ figuresEn:["NYC Subway signage and the 1972 map","American Airlines identity (1967)","The Vignelli Canon"],
+ palette:["#191512","#F2EEE3","#D02E26","#1F5CA9"]},
+{zh:"迪特·拉姆斯",en:"Dieter Rams",cat:"designer",era:"1932–",region:"德国",regionEn:"Germany",
+ desc:"博朗首席设计师，「好设计十项原则」与「少，却更好」深刻塑造了产品设计伦理，苹果美学的直接源头。",
+ descEn:"Braun's chief designer; his Ten Principles of Good Design and 'less but better' shaped the ethics of product design and directly seeded Apple's aesthetic.",
+ traits:["less but better","functional minimal products","neutral grey and white","precise button grids","honest materials"],
+ figures:["Braun SK4 留声机「白雪公主之棺」","Braun T3 收音机（iPod 原型）","606 万用置物架系统"],
+ figuresEn:["Braun SK4 'Snow White's Coffin' phonograph","Braun T3 radio (the iPod's ancestor)","606 Universal Shelving System"],
+ palette:["#E8E4DA","#B4B0A6","#37424A","#E8B81E"]},
+{zh:"田中一光",en:"Ikko Tanaka",cat:"designer",era:"1930–2002",region:"日本",regionEn:"Japan",
+ desc:"以几何色块重构日本古典：《日本舞踊》海报用方圆三角拼出艺伎面容，东西方在他手中达成最优雅的和解；无印良品创始顾问。",
+ descEn:"Rebuilt Japanese classicism from geometric planes: the Nihon Buyo poster conjures a geisha from circles and triangles — East and West reconciled with utmost elegance; founding advisor of MUJI.",
+ traits:["geometric japanese face","flat color plane composition","traditional motifs modernized","elegant negative space"],
+ figures:["《Nihon Buyo》海报 (1981)","无印良品创立期艺术指导","写乐展、琳派展海报"],
+ figuresEn:["The Nihon Buyo poster (1981)","Founding art direction for MUJI","Sharaku and Rimpa exhibition posters"],
+ palette:["#26456E","#E8442E","#F2B705","#F2EEE3"]},
+{zh:"福田繁雄",en:"Shigeo Fukuda",cat:"designer",era:"1932–2009",region:"日本",regionEn:"Japan",
+ desc:"视错觉海报大师：《胜利 1945》中飞回炮膛的炮弹，以一图双关传递反战讯息，幽默与机智是他最锋利的武器。",
+ descEn:"Master of the optical-illusion poster: in VICTORY 1945 a shell flies back into the cannon — one witty image carrying an anti-war message; humor was his sharpest weapon.",
+ traits:["optical illusion poster","figure-ground reversal","single witty visual idea","flat bold silhouettes"],
+ figures:["《VICTORY 1945》反战海报","正负形男女腿图形","错视立体装置"],
+ figuresEn:["The VICTORY 1945 anti-war poster","The figure-ground legs motif","Trompe-l'œil installations"],
+ palette:["#F2B705","#191512","#F2EEE3","#D93A1E"]},
+{zh:"横尾忠则",en:"Tadanori Yokoo",cat:"designer",era:"1936–",region:"日本",regionEn:"Japan",
+ desc:"日本的「视觉炼金术士」：浮世绘、迷幻色彩、太阳放射纹与俗艳拼贴熔于一炉，被誉为东方的安迪·沃霍尔。",
+ descEn:"Japan's visual alchemist: ukiyo-e, psychedelia, rising-sun rays and gaudy collage fused into one — hailed as the Andy Warhol of the East.",
+ traits:["psychedelic collage","rising sun rays","ukiyo-e pop fusion","saturated pink and red","dense symbolic imagery"],
+ figures:["《腰卷阿仙》剧场海报 (1966)","三岛由纪夫相关装帧","Word & Image 个展 (MoMA)"],
+ figuresEn:["Koshimaki-Osen theatre poster (1966)","Book designs around Yukio Mishima","Word & Image solo show, MoMA"],
+ palette:["#E8186D","#F2B705","#1F5CA9","#191512"]},
+{zh:"原研哉",en:"Kenya Hara",cat:"designer",era:"1958–",region:"日本",regionEn:"Japan",
+ desc:"无印良品艺术总监，以「空」与「白」为方法论：设计不是制造图像，而是创造容纳想象的容器。《设计中的设计》影响整个东亚。",
+ descEn:"Art director of MUJI; 'emptiness' and 'white' as methodology — design not as image-making but as a vessel for imagination. Designing Design shaped a generation across East Asia.",
+ traits:["emptiness and whiteness","horizon line composition","quiet textural detail","muji aesthetics","sensory minimalism"],
+ figures:["MUJI「地平线」广告 (2003)","长野冬奥开闭幕式节目册","《设计中的设计》《白》"],
+ figuresEn:["MUJI 'Horizon' campaign (2003)","Nagano Winter Olympics programs","Designing Design, White"],
+ palette:["#F4F1EA","#D8D2C4","#9C9588","#191512"]},
+{zh:"深泽直人",en:"Naoto Fukasawa",cat:"designer",era:"1956–",region:"日本",regionEn:"Japan",
+ desc:"「无意识设计」（Without Thought）：好的设计嵌入行为本身，如拉绳即开的壁挂 CD 机。±0 品牌创始人。",
+ descEn:"'Without Thought' — good design dissolves into behavior itself, like the wall-mounted CD player you start by pulling its cord. Founder of ±0.",
+ traits:["without thought design","behavioral affordance","soft minimal products","matte white and grey"],
+ figures:["MUJI 壁挂式 CD 机 (1999)","±0 加湿器","INFOBAR 手机"],
+ figuresEn:["MUJI wall-mounted CD player (1999)","±0 humidifier","INFOBAR mobile phone"],
+ palette:["#E8E4DA","#C4BFB4","#7A766C","#191512"]},
+{zh:"内维尔·布罗迪",en:"Neville Brody",cat:"designer",era:"1957–",region:"英国",regionEn:"UK",
+ desc:"《The Face》杂志艺术总监，把字体当图像武器：构成主义式的实验字形与版面，定义了 80 年代英国青年文化的视觉声调。",
+ descEn:"Art director of The Face, wielding type as image: constructivist letterforms and layouts that defined the visual voice of 1980s British youth culture.",
+ traits:["experimental typeface design","constructivist magazine layout","bold custom lettering","post-punk graphic energy"],
+ figures:["《The Face》《Arena》杂志改版","FF Blur 等实验字体","FUSE 实验字体计划"],
+ figuresEn:["The Face and Arena redesigns","FF Blur and other experimental typefaces","The FUSE project"],
+ palette:["#191512","#D93A1E","#E8E0CE","#5B6EE8"]},
+{zh:"大卫·卡森",en:"David Carson",cat:"designer",era:"1955–",region:"美国",regionEn:"USA",
+ desc:"「垃圾摇滚版式」教父：在《Ray Gun》中撕碎网格、让文字溺水重叠，证明易读性之外另有「可感性」。",
+ descEn:"Godfather of grunge typography: in Ray Gun he tore up the grid and drowned the text, proving there is 'feelability' beyond legibility.",
+ traits:["grunge typography","torn overlapping layers","broken grid chaos","experimental photo treatment","raw analog texture"],
+ figures:["《Ray Gun》音乐杂志 (1992–95)","《Beach Culture》杂志","《The End of Print》"],
+ figuresEn:["Ray Gun music magazine (1992–95)","Beach Culture magazine","The End of Print"],
+ palette:["#8C8678","#191512","#C4B59B","#D93A1E"]},
+{zh:"施德明",en:"Stefan Sagmeister",cat:"designer",era:"1962–",region:"奥地利 / 美国",regionEn:"Austria / USA",
+ desc:"用身体与时间做设计：刻在皮肤上的讲座海报、每七年休假一年的实践。挑衅、诚实、手工感，让平面设计重新有体温。",
+ descEn:"Design made with body and time: lecture posters carved into his own skin, a sabbatical every seven years — provocative, honest, handmade, warm-blooded graphic design.",
+ traits:["hand-carved lettering on skin","provocative conceptual poster","handcrafted typography","diary-like honesty"],
+ figures:["AIGA 讲座海报（刻字于身体, 1999)","Lou Reed《Set the Twilight Reeling》封面","《Things I have learned in my life so far》"],
+ figuresEn:["AIGA lecture poster carved into skin (1999)","Lou Reed, Set the Twilight Reeling cover","Things I Have Learned in My Life So Far"],
+ palette:["#E8D4C4","#191512","#D93A1E","#F2EEE3"]},
+{zh:"扎哈·哈迪德",en:"Zaha Hadid",cat:"designer",era:"1950–2016",region:"伊拉克 / 英国",regionEn:"Iraq / UK",
+ desc:"「曲线女王」：从至上主义绘画走向参数化流体建筑，广州大剧院、北京大兴机场的连续曲面重写了空间的语法。",
+ descEn:"'Queen of the Curve': from Suprematist painting to parametric fluid architecture — Guangzhou Opera House and Beijing Daxing Airport rewrote the grammar of space.",
+ traits:["fluid parametric curves","seamless white surfaces","dynamic swooping forms","futuristic architecture","suprematist painting roots"],
+ figures:["广州大剧院、北京大兴国际机场","维特拉消防站 (1993)","早期至上主义风格建筑绘画"],
+ figuresEn:["Guangzhou Opera House, Beijing Daxing Airport","Vitra Fire Station (1993)","Early Suprematist-style architectural paintings"],
+ palette:["#E8E4DA","#B4B0A6","#37424A","#191512"]},
+{zh:"伊姆斯夫妇",en:"Charles & Ray Eames",cat:"designer",era:"1907–1978 / 1912–1988",region:"美国",regionEn:"USA",
+ desc:"中古现代的灵魂人物：弯曲胶合板与玻璃钢椅、伊姆斯住宅、影片《十的次方》，把严谨工程变成轻盈的快乐。",
+ descEn:"Souls of Mid-Century Modern: molded plywood and fiberglass chairs, the Eames House, the film Powers of Ten — rigorous engineering turned into lightness and joy.",
+ traits:["molded plywood furniture","midcentury organic curves","playful structural honesty","case study house"],
+ figures:["Eames Lounge Chair (1956)","LCW 弯木椅、玻璃钢壳椅","影片《Powers of Ten》(1977)"],
+ figuresEn:["Eames Lounge Chair (1956)","LCW molded plywood chair, fiberglass shell chairs","Powers of Ten (1977)"],
+ palette:["#8A5A2B","#191512","#E8E0CE","#C45A28"]},
+{zh:"埃托雷·索特萨斯",en:"Ettore Sottsass",cat:"designer",era:"1917–2007",region:"意大利",regionEn:"Italy",
+ desc:"从奥利维蒂的红色情人节打字机到孟菲斯集团创始人，他终生证明：设计可以是感官的、诗意的、不听话的。",
+ descEn:"From Olivetti's valentine-red typewriter to founding the Memphis Group, a lifelong proof that design can be sensual, poetic and disobedient.",
+ traits:["memphis radical design","totem-like furniture","candy red plastic","anti-functionalist poetry"],
+ figures:["Valentine 打字机 (1969)","Carlton 书架 (1981)","Ultrafragola 波浪镜"],
+ figuresEn:["The Valentine typewriter (1969)","The Carlton bookcase (1981)","The Ultrafragola mirror"],
+ palette:["#E8442E","#F25CA2","#F2B705","#191512"]},
+{zh:"柳宗理",en:"Sori Yanagi",cat:"designer",era:"1915–2011",region:"日本",regionEn:"Japan",
+ desc:"民艺理论家柳宗悦之子，蝴蝶凳将传统木工与现代成型工艺合一；他的不锈钢厨具至今仍是「用之美」的典范。",
+ descEn:"Son of mingei theorist Sōetsu Yanagi; the Butterfly Stool weds traditional woodcraft to modern molding, and his stainless kitchenware remains a model of 'beauty in use'.",
+ traits:["butterfly stool curves","mingei folk craft spirit","anonymous functional beauty","hand-finished stainless steel"],
+ figures:["蝴蝶凳 Butterfly Stool (1954)","不锈钢水壶与餐具系列","1964 东京奥运圣火台"],
+ figuresEn:["The Butterfly Stool (1954)","Stainless steel kettle and tableware","Cauldron for the 1964 Tokyo Olympic flame"],
+ palette:["#C4B59B","#8A6F4B","#37424A","#E8E0CE"]},
+{zh:"维吉尔·阿布洛",en:"Virgil Abloh",cat:"designer",era:"1980–2021",region:"美国",regionEn:"USA",
+ desc:"Off-White 创始人、LV 男装总监：引号、斜杠与工业捆带把街头符号学带入奢侈品，「3% 法则」重新定义原创。",
+ descEn:"Founder of Off-White and menswear director at Louis Vuitton: quotation marks, slashes and industrial straps brought street semiotics into luxury; his '3% rule' redefined originality.",
+ traits:["quotation mark labels","industrial strap graphics","streetwear luxury fusion","helvetica irony","diagonal hazard stripes"],
+ figures:["Off-White「红色捆带」与引号系列","Nike「The Ten」联名解构","IKEA MARKERAD 系列"],
+ figuresEn:["Off-White red-strap and quotation-mark series","Nike 'The Ten' deconstructed collaboration","IKEA MARKERAD collection"],
+ palette:["#F2EEE3","#191512","#E8442E","#F2B705"]},
+
+/* ---------------- 风格语汇 style ---------------- */
+{zh:"中古现代风",en:"Mid-Century Modern",cat:"style",era:"1945–1969",region:"美国 / 北欧",regionEn:"USA / Scandinavia",
+ desc:"战后乐观主义的居家化身：柚木家具、细腿斜撑、原子与回旋镖图案、芥末黄与牛油果绿，复古设计的常青题材。",
+ descEn:"Postwar optimism domesticated: teak furniture on tapered legs, atomic and boomerang motifs, mustard and avocado — an evergreen subject of retro design.",
+ traits:["teak wood furniture","tapered legs","atomic starburst motifs","mustard and avocado palette","organic boomerang shapes"],
+ figures:["伊姆斯、雅各布森、内尔森等设计的经典家具","《广告狂人》美术风格"],
+ figuresEn:["Classic furniture by Eames, Jacobsen, Nelson","The art direction of Mad Men"],
+ palette:["#C9912B","#5B7A3E","#C45A28","#3E3A32"]},
+{zh:"北欧设计",en:"Scandinavian Design",cat:"style",era:"1950s 至今",eraEn:"1950s–present",region:"北欧",regionEn:"Scandinavia",
+ desc:"民主的设计：浅色木材、柔和光线、功能与温暖并重（hygge），少装饰但不冷漠，是家居与品牌的安全而优雅的语言。",
+ descEn:"Democratic design: pale wood, soft light, function with warmth (hygge) — spare but never cold, a safe and graceful language for homes and brands.",
+ traits:["light birch wood","soft natural light","hygge cozy minimalism","muted pastel accents","functional warmth"],
+ figures:["阿尔瓦·阿尔托 Alvar Aalto — 玻璃花瓶与曲木","汉斯·瓦格纳 Hans Wegner — Y 椅","Marimekko 印花"],
+ figuresEn:["Alvar Aalto — glass vases and bentwood","Hans Wegner — the Wishbone Chair","Marimekko prints"],
+ palette:["#E8E0D2","#C4B59B","#7A9B8E","#37424A"]},
+{zh:"侘寂",en:"Wabi-Sabi",cat:"style",era:"15世纪至今",eraEn:"15th c.–present",region:"日本",regionEn:"Japan",
+ desc:"接受不完美、无常与朴素之美：粗陶、裂痕金缮、风化木与暗哑光线。对抗过度修饰的一剂良药。",
+ descEn:"Beauty in imperfection, impermanence and modesty: rough ceramics, kintsugi gold seams, weathered wood and dim quiet light — an antidote to over-polish.",
+ traits:["imperfect natural materials","weathered texture","quiet asymmetry","muted earthy tones","kintsugi repaired cracks","dim soft light"],
+ figures:["千利休 — 茶室美学","乐烧茶碗、金缮工艺","Axel Vervoordt 室内设计"],
+ figuresEn:["Sen no Rikyū — tea-room aesthetics","Raku tea bowls, kintsugi repair","Axel Vervoordt interiors"],
+ palette:["#9C8E78","#6E6354","#C4B8A4","#3E382E"]},
+{zh:"粗野主义",en:"Brutalism",cat:"style",era:"1950s–1970s / 2014 至今",eraEn:"1950s–1970s / 2014–present",region:"英国 / 全球",regionEn:"UK / Global",
+ desc:"清水混凝土的纪念碑性：暴露结构、粗粝表面、巨大几何体块。近年在网页设计中复兴为反精致的原始 HTML 美学。",
+ descEn:"The monumentality of raw concrete: exposed structure, coarse surfaces, massive geometric blocks — lately reborn on the web as an anti-polish raw-HTML aesthetic.",
+ traits:["raw exposed concrete","massive monolithic blocks","repetitive modular units","stark shadows","anti-polish web design"],
+ figures:["勒·柯布西耶 — 马赛公寓","伦敦巴比肯中心 Barbican","Brutalist Websites 网站合集"],
+ figuresEn:["Le Corbusier — Unité d'Habitation","The Barbican Centre, London","The Brutalist Websites collection"],
+ palette:["#8C8678","#B4B0A6","#5C544A","#191512"]},
+{zh:"赛博朋克",en:"Cyberpunk",cat:"style",era:"1982 至今",eraEn:"1982–present",region:"全球",regionEn:"Global",
+ desc:"「高科技，低生活」：霓虹雨夜、全息广告、混杂的亚洲街景与机械义体。《银翼杀手》与《攻壳机动队》定义了它的光谱。",
+ descEn:"'High tech, low life': neon rain, holographic ads, hybrid Asian streetscapes and cybernetic bodies — Blade Runner and Ghost in the Shell drew its spectrum.",
+ traits:["neon-noir rainy city","holographic advertisements","cybernetic implants","teal and magenta glow","dystopian megacity","wet reflective streets"],
+ figures:["《银翼杀手》(1982) 美术","《攻壳机动队》(1995)","《赛博朋克 2077》"],
+ figuresEn:["Blade Runner (1982) production design","Ghost in the Shell (1995)","Cyberpunk 2077"],
+ palette:["#0E1626","#E8186D","#1FC4D4","#F2B705"]},
+{zh:"蒸汽朋克",en:"Steampunk",cat:"style",era:"1987 至今",eraEn:"1987–present",region:"全球",regionEn:"Global",
+ desc:"假如蒸汽机统治了未来：黄铜齿轮、铆钉皮革、维多利亚服饰与飞艇，复古机械的浪漫想象。",
+ descEn:"What if steam had ruled the future: brass gears, riveted leather, Victorian dress and airships — the romance of retro machinery.",
+ traits:["brass gears and cogs","victorian machinery","riveted copper and leather","airship silhouettes","steam-powered contraptions"],
+ figures:["儒勒·凡尔纳小说插画传统","《天空之城》机械设定","《哈尔的移动城堡》"],
+ figuresEn:["The Jules Verne illustration tradition","Castle in the Sky mechanical design","Howl's Moving Castle"],
+ palette:["#8A6420","#5B4632","#B87333","#2B2620"]},
+{zh:"蒸汽波",en:"Vaporwave",cat:"style",era:"2010s",region:"互联网",regionEn:"Internet",
+ desc:"互联网原生的怀旧拼贴：粉紫渐变、希腊石膏像、Windows 95 窗口、棕榈树与日文霓虹，对消费主义的迷幻嘲讽。",
+ descEn:"Internet-native nostalgia collage: pink-violet gradients, Greek plaster busts, Windows 95 windows, palms and neon Japanese text — a psychedelic mockery of consumerism.",
+ traits:["pink and cyan gradients","greek statue busts","windows 95 interface","glitch artifacts","palm trees and grids","japanese neon text"],
+ figures:["Macintosh Plus《Floral Shoppe》封面","A E S T H E T I C S 文化","早期 Tumblr 视觉社区"],
+ figuresEn:["Macintosh Plus — the Floral Shoppe cover","A E S T H E T I C S culture","Early Tumblr visual communities"],
+ palette:["#F25CA2","#5BC4D4","#8C6EE8","#1A1430"]},
+{zh:"复古未来主义",en:"Retrofuturism",cat:"style",era:"1950s 原型 / 持续回潮",eraEn:"1950s origin / recurring",region:"美国",regionEn:"USA",
+ desc:"过去对未来的想象：原子时代的飞碟造型、镭射枪哥特、太空殖民海报。乐观、圆润、带着旧广告画的笔触。",
+ descEn:"The past's vision of the future: atomic-age saucer curves, raygun gothic, space-colony posters — optimistic, rounded, painted with an old advertisement's brush.",
+ traits:["atomic age optimism","raygun gothic","flying saucer curves","space colony posters","1950s sci-fi illustration"],
+ figures:["迪士尼《明日世界》","NASA / JPL 旅行海报系列","《杰森一家》《辐射》游戏美术"],
+ figuresEn:["Disney Tomorrowland","The NASA / JPL travel poster series","The Jetsons, Fallout game art"],
+ palette:["#D93A1E","#2BB3A3","#F2D8A8","#26324E"]},
+{zh:"酸性设计",en:"Acid Graphics",cat:"style",era:"2018 至今",eraEn:"2018–present",region:"全球",regionEn:"Global",
+ desc:"锐舞传单美学的数字变种：液态镭射金属、扭曲字体、刺眼荧光绿与紫，故意「有毒」的反审美张力。",
+ descEn:"A digital mutation of rave-flyer aesthetics: liquid chrome, warped type, stinging fluorescent green and violet — deliberately 'toxic' anti-beauty tension.",
+ traits:["liquid chrome metal","distorted warped type","toxic fluorescent green","rave flyer energy","iridescent y2k textures"],
+ figures:["90s 锐舞传单 Rave Flyers","David Rudnick 等新锐平面","Instagram 酸性设计社区"],
+ figuresEn:["1990s rave flyers","David Rudnick and the new graphic wave","Instagram acid-graphics communities"],
+ palette:["#A8E82E","#8C6EE8","#C8C8D4","#191512"]},
+{zh:"扁平化设计",en:"Flat Design",cat:"style",era:"2012–2017",region:"全球",regionEn:"Global",
+ desc:"剔除高光、阴影与质感的界面语言：纯色块、简洁图标与无衬线字体。由 Windows 8 与 iOS 7 推向主流。",
+ descEn:"Interfaces stripped of highlight, shadow and texture: solid color planes, simple icons and clean sans-serifs — pushed mainstream by Windows 8 and iOS 7.",
+ traits:["solid flat colors","simple geometric icons","no shadows or gradients","clean sans-serif ui","minimal vector illustration"],
+ figures:["Microsoft Metro 设计语言","Apple iOS 7 (2013)","Google Material Design（半扁平）"],
+ figuresEn:["The Microsoft Metro design language","Apple iOS 7 (2013)","Google Material Design (semi-flat)"],
+ palette:["#2BB3D4","#E8442E","#F2B705","#F2EEE3"]},
+{zh:"拟物化设计",en:"Skeuomorphism",cat:"style",era:"2007–2013 / 回潮中",eraEn:"2007–2013 / returning",region:"全球",regionEn:"Global",
+ desc:"用真实材质隐喻数字功能：皮革缝线日历、木纹书架、玻璃光泽按钮。iOS 6 时代的主导语言，近年以新拟物回归。",
+ descEn:"Real materials as digital metaphor: leather-stitched calendars, wooden bookshelves, glossy glass buttons — the idiom of the iOS 6 era, now returning.",
+ traits:["realistic leather stitching","glossy glass buttons","wood grain textures","detailed realistic icons","tactile material metaphors"],
+ figures:["Apple iOS 6 界面 (2012)","早期 Mac OS X Aqua 风格","拟真图标设计传统"],
+ figuresEn:["The Apple iOS 6 interface (2012)","Early Mac OS X Aqua","The realistic icon tradition"],
+ palette:["#8A5A2B","#C4B59B","#5C7A9E","#3E3A32"]},
+{zh:"新拟态",en:"Neumorphism",cat:"style",era:"2019–2021",region:"全球",regionEn:"Global",
+ desc:"从背景中「挤出」的柔软 UI：同色系的双向投影营造浮雕感，精致但对比度低，作为视觉风格大于实用方案。",
+ descEn:"Soft UI extruded from its own background: same-hue dual shadows create an embossed feel — exquisite but low-contrast, more a visual style than a practical system.",
+ traits:["soft extruded shapes","subtle dual shadows","monochromatic relief","matte plastic surface","pillowy ui elements"],
+ figures:["Dribbble 概念 UI 浪潮 (2019)","Alexander Plyuto 的开创性 shot"],
+ figuresEn:["The 2019 Dribbble concept-UI wave","Alexander Plyuto's seminal shots"],
+ palette:["#E0E5EC","#C8CDD4","#A3B1C6","#5C6B7A"]},
+{zh:"玻璃拟态",en:"Glassmorphism",cat:"style",era:"2020 至今",eraEn:"2020–present",region:"全球",regionEn:"Global",
+ desc:"磨砂玻璃的层叠界面：背景模糊、半透明白与细边框，悬浮于鲜艳渐变之上。macOS Big Sur 与 Windows 11 的主调。",
+ descEn:"Layered frosted glass: backdrop blur, translucent white and hairline borders floating over vivid gradients — the keynote of macOS Big Sur and Windows 11.",
+ traits:["frosted glass blur","translucent white panels","thin light borders","vivid gradient backdrop","floating layered cards"],
+ figures:["macOS Big Sur (2020)","Windows 11 Fluent / Mica 材质","visionOS 空间界面"],
+ figuresEn:["macOS Big Sur (2020)","Windows 11 Fluent / Mica materials","The visionOS spatial interface"],
+ palette:["#B4D4E8","#E8C4D8","#F2EEE3","#5B6EE8"]},
+{zh:"等距插画",en:"Isometric Illustration",cat:"style",era:"2010s 至今",eraEn:"2010s–present",region:"全球",regionEn:"Global",
+ desc:"无灭点的 2.5D 视角：30° 轴测网格上的微缩世界，干净的矢量面与统一光源，科技公司插画的通用方言。",
+ descEn:"A 2.5D world with no vanishing point: miniature scenes on a 30° grid, clean vector planes and uniform light — the lingua franca of tech-company illustration.",
+ traits:["isometric 30 degree grid","miniature 3d world","clean vector planes","consistent ambient lighting","tiny characters"],
+ figures:["SimCity 与经典像素等距游戏","Slack / Stripe 等品牌插画系统"],
+ figuresEn:["SimCity and classic isometric games","Brand illustration systems at Slack, Stripe etc."],
+ palette:["#5B6EE8","#8CD4C8","#F2B705","#26324E"]},
+{zh:"低多边形",en:"Low Poly",cat:"style",era:"2013 至今",eraEn:"2013–present",region:"全球",regionEn:"Global",
+ desc:"以稀疏三角面拼出的晶体化世界：硬朗的明暗分面如折纸，从早期 3D 游戏的限制演变为主动的风格选择。",
+ descEn:"Crystalline worlds of sparse triangles: hard-shaded facets like folded paper — a constraint of early 3D games turned deliberate style.",
+ traits:["faceted triangular surfaces","crystalline geometry","flat shaded polygons","origami-like landscapes","gradient facet lighting"],
+ figures:["《纪念碑谷》(几何美学)","Timothy J. Reynolds 的低多边形插画"],
+ figuresEn:["Monument Valley (geometric aesthetics)","Timothy J. Reynolds' low-poly illustration"],
+ palette:["#2BB3A3","#26456E","#F2B705","#E8DCC4"]},
+{zh:"像素艺术",en:"Pixel Art",cat:"style",era:"1980s / 持续",eraEn:"1980s–present",region:"全球",regionEn:"Global",
+ desc:"格点上的克制艺术：有限调色板、逐像素手工放置、抖动渐变。8-bit 怀旧与独立游戏让它长盛不衰。",
+ descEn:"The discipline of the grid: limited palettes, pixels placed by hand, dithered gradients — kept evergreen by 8-bit nostalgia and indie games.",
+ traits:["8-bit pixel grid","limited color palette","dithered gradients","retro game sprites","chunky pixelated edges"],
+ figures:["任天堂 FC 时代美术","《星露谷物语》《Celeste》","eBoy 像素城市"],
+ figuresEn:["Nintendo Famicom-era art","Stardew Valley, Celeste","eBoy pixel cities"],
+ palette:["#2B4C8C","#5BC46E","#E8442E","#191512"]},
+{zh:"国潮",en:"China-Chic / Guochao",cat:"style",era:"2018 至今",eraEn:"2018–present",region:"中国",regionEn:"China",
+ desc:"传统符号的当代转译：故宫红墙金瓦、祥云仙鹤、书法笔触与街头潮流嫁接，民族审美自信的商业表达。",
+ descEn:"Traditional symbols retold in the present tense: Forbidden City red and gold, cranes and clouds, calligraphic strokes grafted onto streetwear — the commercial voice of native aesthetic confidence.",
+ traits:["traditional chinese motifs","crane and cloud patterns","imperial red and gold","calligraphy brush strokes","streetwear fusion","forbidden city palette"],
+ figures:["故宫文创系列","李宁「中国李宁」纽约时装周 (2018)","《哪吒》《黑神话：悟空》视觉"],
+ figuresEn:["Palace Museum merchandise","Li-Ning 'China Li-Ning' at NYFW (2018)","Ne Zha, Black Myth: Wukong visuals"],
+ palette:["#A8231D","#C5A028","#26456E","#F2EAD8"]},
+
+/* ---------------- 平面与字体 type ---------------- */
+{zh:"网格系统",en:"Grid System",cat:"type",era:"1950s 至今",eraEn:"1950s–present",region:"瑞士起源",regionEn:"Swiss origin",
+ desc:"版面的隐形骨架：栏、行、模块与基线网格让信息有序呼吸。源于瑞士学派，是一切版式训练的起点。",
+ descEn:"The invisible skeleton of the page: columns, rows, modules and baselines let information breathe in order — born of the Swiss school, the first lesson of layout.",
+ traits:["modular grid layout","baseline rhythm","column structure","ordered information hierarchy","systematic alignment"],
+ figures:["《Grid Systems in Graphic Design》","卡尔·格斯特纳 Karl Gerstner — 程序设计"],
+ figuresEn:["Grid Systems in Graphic Design","Karl Gerstner — Designing Programmes"],
+ palette:["#F2EEE3","#D93A1E","#191512","#B4B0A6"]},
+{zh:"瑞士字体排印",en:"Swiss Typography",cat:"type",era:"1950s 至今",eraEn:"1950s–present",region:"瑞士",regionEn:"Switzerland",
+ desc:"Helvetica、Univers 与 Akzidenz-Grotesk 的故乡：左齐不对称、紧凑字距、字体即图形，「中性」本身成为最强烈的风格。",
+ descEn:"Homeland of Helvetica, Univers and Akzidenz-Grotesk: flush-left ragging, tight spacing, type as image — 'neutrality' itself became the strongest style.",
+ traits:["helvetica neue grotesque","flush left ragged right","tight letter spacing","type as image","neutral clarity"],
+ figures:["Helvetica (1957) / Univers (1957)","艾米尔·鲁德 Emil Ruder — 《Typographie》","纪录片《Helvetica》(2007)"],
+ figuresEn:["Helvetica (1957) / Univers (1957)","Emil Ruder — Typographie","Helvetica, the documentary (2007)"],
+ palette:["#191512","#F2EEE3","#E8442E","#8C8678"]},
+{zh:"编辑设计",en:"Editorial Design",cat:"type",era:"持续",eraEn:"ongoing",region:"全球",regionEn:"Global",
+ desc:"杂志与书籍的叙事版式：跨页节奏、首字下沉、引文抽排与图文咬合，让阅读成为有起伏的体验。",
+ descEn:"The narrative layout of magazines and books: spread pacing, drop caps, pull quotes and image-text interplay turn reading into an experience with a pulse.",
+ traits:["magazine spread layout","dramatic pull quotes","drop caps","photo-text interplay","pacing and rhythm","masthead typography"],
+ figures:["《Harper's Bazaar》Alexey Brodovitch 传统","《Kinfolk》《Monocle》当代范式","中文领域的《汉声》杂志"],
+ figuresEn:["The Alexey Brodovitch tradition at Harper's Bazaar","Kinfolk, Monocle as contemporary models","Hansheng magazine in the Chinese world"],
+ palette:["#F2EEE3","#191512","#C45A28","#7A8B6F"]},
+{zh:"字体海报",en:"Typographic Poster",cat:"type",era:"持续",eraEn:"ongoing",region:"全球",regionEn:"Global",
+ desc:"只用文字作画：超大字号、切割与重叠、字形本身的解剖之美。从瑞士学派到当代实验字体，是平面功力的试金石。",
+ descEn:"Painting with letters alone: gigantic sizes, slicing and overlap, the anatomy of glyphs as the picture — a litmus test of graphic skill from the Swiss school to today's experiments.",
+ traits:["oversized display type","overlapping letterforms","type as composition","expressive kerning","monochrome with one accent"],
+ figures:["Wim Crouwel — New Alphabet","Experimental Jetset","当代字体设计竞赛海报"],
+ figuresEn:["Wim Crouwel — New Alphabet","Experimental Jetset","Contemporary type-competition posters"],
+ palette:["#191512","#F2EEE3","#1F5CA9","#D93A1E"]},
+{zh:"动态字体",en:"Kinetic Typography",cat:"type",era:"1990s 至今",eraEn:"1990s–present",region:"全球",regionEn:"Global",
+ desc:"会呼吸的文字：随节奏伸缩、液化、爆裂的动态字形，可变字体技术让网页与片头中的字体表演愈发普遍。",
+ descEn:"Letters that breathe: stretching, liquefying, bursting to rhythm — variable-font technology makes type performance ever more common on screens and in titles.",
+ traits:["animated morphing letterforms","variable font weight animation","liquid type effects","rhythmic text motion","title sequence energy"],
+ figures:["索尔·巴斯片头传统的延伸","DIA Studio 的动态字体实践","可变字体 Variable Fonts 技术"],
+ figuresEn:["The Saul Bass title-sequence lineage","DIA Studio's kinetic typography","Variable Fonts technology"],
+ palette:["#191512","#A8E82E","#F2EEE3","#5B6EE8"]},
+{zh:"书法与手写字",en:"Calligraphy & Lettering",cat:"type",era:"古代至今",eraEn:"ancient–present",region:"全球",regionEn:"Global",
+ desc:"从西文铜版花体到东方狂草：笔触的速度、压力与飞白皆是情绪。手写感是数字时代最稀缺的人味。",
+ descEn:"From copperplate flourish to wild cursive ink: speed, pressure and dry-brush gaps all carry emotion — the handmade is the digital age's scarcest warmth.",
+ traits:["expressive brush strokes","copperplate flourishes","ink splatter energy","hand-lettered warmth","oriental cursive calligraphy"],
+ figures:["井上有一 — 墨象书法","Herb Lubalin — 字标设计","当代 Lettering 社区"],
+ figuresEn:["Yu-ichi Inoue — ink-form calligraphy","Herb Lubalin — logotype lettering","The contemporary lettering community"],
+ palette:["#191512","#F2EEE3","#8A2B1E","#C4B59B"]},
+
+/* ---------------- 色彩与材质 visual ---------------- */
+{zh:"克莱因蓝",en:"International Klein Blue",cat:"visual",era:"1957",region:"法国",regionEn:"France",
+ desc:"伊夫·克莱因注册的纯粹群青（IKB），饱和到几乎吞噬空间。单独大面积使用时自带精神性与纪念感。",
+ descEn:"Yves Klein's patented pure ultramarine (IKB), saturated enough to swallow space; used alone at scale it carries spirituality and monumentality.",
+ traits:["pure ultramarine blue","ikb monochrome","spiritual saturated field","single color dominance"],
+ figures:["伊夫·克莱因 Yves Klein — 单色画与人体测量","IKB 191 色号"],
+ figuresEn:["Yves Klein — monochromes and Anthropometries","The IKB 191 formula"],
+ palette:["#002FA7","#1A3FB8","#F2EEE3","#191512"]},
+{zh:"莫兰迪色",en:"Morandi Palette",cat:"visual",era:"20世纪中叶",eraEn:"mid-20th century",region:"意大利",regionEn:"Italy",
+ desc:"画家莫兰迪静物中的灰调色系：所有颜色都掺入灰与白，彼此谦让、安静高级，是室内与品牌设计的常用气质。",
+ descEn:"The grey-veiled palette of Morandi's still lifes: every hue cut with grey and white, mutually deferential — quiet and refined, a staple mood of interiors and branding.",
+ traits:["muted greyish tones","dusty soft pastels","low saturation harmony","quiet still life mood","powdery texture"],
+ figures:["乔治·莫兰迪 Giorgio Morandi — 瓶罐静物系列"],
+ figuresEn:["Giorgio Morandi — the bottle still-life series"],
+ palette:["#B5A8A0","#A0A89B","#C9BCA8","#8C8278"]},
+{zh:"多巴胺配色",en:"Dopamine Colors",cat:"visual",era:"2022 至今",eraEn:"2022–present",region:"全球",regionEn:"Global",
+ desc:"以高饱和糖果色刺激愉悦感的穿搭与设计潮流：明黄、芭比粉、克莱因蓝同框，反精致灰调的快乐宣言。",
+ descEn:"High-saturation candy colors engineered for joy: bright yellow, Barbie pink and Klein blue in one frame — a happy manifesto against polite grey.",
+ traits:["high saturation candy colors","joyful color blocking","hot pink and bright yellow","playful maximalist palette"],
+ figures:["Dopamine Dressing 时尚潮流","Pantone 近年高饱和年度色"],
+ figuresEn:["The Dopamine Dressing fashion trend","Pantone's recent saturated colors of the year"],
+ palette:["#F2399E","#F2B705","#2BB35A","#5B6EE8"]},
+{zh:"全息渐变",en:"Holographic Gradient",cat:"visual",era:"2016 至今",eraEn:"2016–present",region:"全球",regionEn:"Global",
+ desc:"镭射卡纸与肥皂泡的虹彩：粉紫青的连续流动渐变，常配铬金属与玻璃质感，自带未来与梦幻属性。",
+ descEn:"The iridescence of laser foil and soap bubbles: continuous pink-violet-cyan flow, often paired with chrome and glass — natively futuristic and dreamlike.",
+ traits:["iridescent foil sheen","pink purple cyan flow","soap bubble rainbow","chrome reflective surface","dreamy futuristic glow"],
+ figures:["镭射卡纸印刷工艺","Instagram / Behance 全息视觉浪潮"],
+ figuresEn:["Holographic foil printing","The holographic wave on Instagram / Behance"],
+ palette:["#E8A2D4","#A2C4E8","#C4E8D4","#D4A2E8"]},
+{zh:"黏土渲染",en:"Clay Render / Clay 3D",cat:"visual",era:"2020 至今",eraEn:"2020–present",region:"全球",regionEn:"Global",
+ desc:"C4D/Blender 中的哑光黏土质感：圆润无棱角、柔和棚光、马卡龙色，亲切无害，是科技与电商 3D 插画的主流。",
+ descEn:"Matte clay materials in C4D/Blender: rounded edgeless forms, soft studio light, macaron colors — friendly and harmless, the mainstream of tech and e-commerce 3D.",
+ traits:["matte clay material","soft studio lighting","rounded chubby forms","macaron color palette","c4d blender 3d render"],
+ figures:["Blender / Cinema 4D 社区","各大科技公司 3D 插画系统"],
+ figuresEn:["The Blender / Cinema 4D communities","3D illustration systems of major tech brands"],
+ palette:["#F2C4B4","#A8D4C8","#F2E2A8","#8CA8E8"]},
+{zh:"霓虹发光",en:"Neon Glow",cat:"visual",era:"1920s 霓虹灯 / 持续",eraEn:"1920s–present",region:"全球",regionEn:"Global",
+ desc:"暗夜中的气体之光：发光管的色晕、湿地面的反射、电光蓝与品红。从赌城招牌到合成波专辑封面的通用情绪。",
+ descEn:"Gaslight in the dark: the halo of glowing tubes, wet-street reflections, electric blue and magenta — from Vegas signage to synthwave covers, a universal mood.",
+ traits:["glowing neon tubes","electric blue and magenta","dark night backdrop","wet street reflections","synthwave grid horizon"],
+ figures:["香港霓虹招牌文化","Synthwave / Outrun 专辑视觉","《霓虹恶魔》电影摄影"],
+ figuresEn:["Hong Kong neon signage culture","Synthwave / Outrun album art","The Neon Demon cinematography"],
+ palette:["#0E1626","#E8186D","#1FC4D4","#8C6EE8"]},
+{zh:"金属铬质感",en:"Chrome / Liquid Metal",cat:"visual",era:"1980s / 2019 回潮",eraEn:"1980s / 2019 revival",region:"全球",regionEn:"Global",
+ desc:"镜面液态金属：扭曲的环境反射、锐利高光，80 年代机场小说封面与当代酸性设计共同的心头好。",
+ descEn:"Mirror-finish liquid metal: warped environmental reflections and razor highlights — beloved alike by '80s airbrush paperback covers and today's acid graphics.",
+ traits:["mirror chrome surface","liquid metal distortion","sharp specular highlights","80s airbrush chrome type","melting metallic blobs"],
+ figures:["80s Airbrush 插画传统","《终结者 2》T-1000","当代酸性平面中的铬字"],
+ figuresEn:["The 80s airbrush illustration tradition","Terminator 2's T-1000","Chrome type in contemporary acid graphics"],
+ palette:["#C8C8D4","#8C94A8","#E8E8F2","#37424A"]},
+{zh:"孔版印刷质感",en:"Risograph Print",cat:"visual",era:"1986 / 2010s 复兴",eraEn:"1986 / 2010s revival",region:"日本起源",regionEn:"Japan origin",
+ desc:"Riso 孔版机的独特肌理：荧光专色叠印、轻微套不准、颗粒感网点，廉价印刷的限制成了独立出版最迷人的味道。",
+ descEn:"The signature grain of the Risograph: fluorescent spot colors overprinted slightly out of register — cheap printing's limits became indie publishing's most beloved flavor.",
+ traits:["riso fluorescent spot colors","grainy halftone texture","slight misregistration","overprint color mixing","zine print aesthetic"],
+ figures:["独立出版 Zine 文化","Riso 工作室与艺术书展"],
+ figuresEn:["Independent zine culture","Riso studios and art-book fairs"],
+ palette:["#F25CA2","#2BB3D4","#F2B705","#191512"]}
+];
+
+/* ================================================================
+   双语 UI 文案 / BILINGUAL UI STRINGS
+   ================================================================ */
+const UI = {
+  zh:{
+    docTitle:"设计语汇档案馆 · The Design Prompt Archive",
+    stamp:"已归档 / ARCHIVED",
+    title:'设计语汇<span class="ji">档案馆</span>',
+    sub:"The Design Prompt Archive — movements, masters & visual vocabulary",
+    desc:"一座可检索的设计知识库：设计史时期、美术流派、设计大师、风格语汇、平面字体与色彩材质。每张档案卡附代表色板、视觉关键词、可直接复制的 AI prompt，以及维基百科与图片案例的外部资料入口。",
+    stats:["词条 ENTRIES","类别 SECTIONS","视觉关键词 KEYWORDS"],
+    ph:"检索：包豪斯 / bauhaus / 原研哉 / grid …",
+    random:"随机抽一张 ⚄",
+    all:"全部",
+    index:n=>`INDEX — 共 ${n} 条记录`,
+    hint:"点击卡片查看完整档案",
+    empty:"未找到匹配档案 — 换个关键词试试 / NO RECORDS FOUND",
+    file:"档案 FILE",
+    period:"年代 Period",region:"地区 Region",palette:"代表色板 Palette（点击复制）",
+    overview:"简介 / Overview",figures:"代表人物与作品 / Key Figures & Works",
+    keywords:"视觉关键词 / Visual Keywords（点击复制单个）",prompt:"AI Prompt 模板",
+    refs:"资料与图片案例 / References",copy:"复制 COPY",copied:"已复制到剪贴板",
+    links:["维基百科·中","Wikipedia·EN","Google 图片","Pinterest 案例","Behance 项目","Are.na 灵感"],
+    foot1:"※ 词条数据存于本文件 DATA 数组中，可自行增补 · 色板与关键词为风格提炼，仅供创作参考",
+    foot2:"设计语汇档案馆 · DESIGN PROMPT ARCHIVE",
+    langBtn:"EN VERSION"
+  },
+  en:{
+    docTitle:"The Design Prompt Archive · 设计语汇档案馆",
+    stamp:"ARCHIVED / 已归档",
+    title:'The Design <span class="ji">Archive</span>',
+    sub:"设计语汇档案馆 — movements, masters & visual vocabulary",
+    desc:"A searchable design knowledge base: design-history periods, art movements, master designers, style vocabulary, typography, color & material. Every file card carries a representative palette, visual keywords, a copy-ready AI prompt, and reference links to Wikipedia and image archives.",
+    stats:["ENTRIES","SECTIONS","KEYWORDS"],
+    ph:"Search: bauhaus / Kenya Hara / grid …",
+    random:"Random card ⚄",
+    all:"All",
+    index:n=>`INDEX — ${n} records`,
+    hint:"Click a card to open its file",
+    empty:"NO RECORDS FOUND — try another keyword",
+    file:"FILE",
+    period:"Period",region:"Region",palette:"Palette (click to copy)",
+    overview:"Overview",figures:"Key Figures & Works",
+    keywords:"Visual Keywords (click to copy)",prompt:"AI Prompt Template",
+    refs:"References & Image Examples",copy:"COPY",copied:"Copied to clipboard",
+    links:["Wikipedia ZH","Wikipedia EN","Google Images","Pinterest","Behance","Are.na"],
+    foot1:"※ All entries live in the DATA array inside this file — extend freely · Palettes & keywords are stylistic distillations for creative reference",
+    foot2:"DESIGN PROMPT ARCHIVE · 设计语汇档案馆",
+    langBtn:"中文版"
+  }
+};
+
+/* ================================================================ */
+const $ = s => document.querySelector(s);
+const grid = $("#grid"), overlay = $("#overlay"), dossier = $("#dossier"), toast = $("#toast");
+let lang = localStorage.getItem("archive-lang") || "zh";
+let activeCat = "all", query = "", currentIdx = null;
+
+const pad = n => String(n + 1).padStart(3, "0");
+const T = () => UI[lang];
+const eraOf = d => lang === "en" ? (d.eraEn || d.era) : d.era;
+const regionOf = d => lang === "en" ? (d.regionEn || d.region) : d.region;
+const descOf = d => lang === "en" ? (d.descEn || d.desc) : d.desc;
+const figuresOf = d => lang === "en" ? (d.figuresEn || d.figures) : d.figures;
+const nameOf = d => lang === "en" ? d.en : d.zh;
+const subnameOf = d => lang === "en" ? d.zh : d.en;
+const catOf = c => CATS[c][lang];
+
+/* 统计 */
+function renderStats(){
+  $("#stats").innerHTML =
+    `<div><b>${DATA.length}</b><span>${T().stats[0]}</span></div>` +
+    `<div><b>${Object.keys(CATS).length}</b><span>${T().stats[1]}</span></div>` +
+    `<div><b>${DATA.reduce((a,d)=>a+d.traits.length,0)}</b><span>${T().stats[2]}</span></div>`;
+}
+
+/* 类别筛选 chips */
+function renderCats(){
+  const counts = {};
+  DATA.forEach(d => counts[d.cat] = (counts[d.cat] || 0) + 1);
+  let html = `<button class="chip${activeCat==="all"?" on":""}" data-cat="all">${T().all} <i>${DATA.length}</i></button>`;
+  for (const k in CATS)
+    html += `<button class="chip${activeCat===k?" on":""}" data-cat="${k}">${catOf(k)} <i>${counts[k]||0}</i></button>`;
+  $("#cats").innerHTML = html;
+}
+
+/* 检索过滤 */
+function filtered(){
+  const q = query.trim().toLowerCase();
+  return DATA.map((d,i)=>({...d, idx:i})).filter(d => {
+    if (activeCat !== "all" && d.cat !== activeCat) return false;
+    if (!q) return true;
+    return [d.zh, d.en, d.era, d.eraEn||"", d.region, d.regionEn||"", d.desc, d.descEn||"",
+            d.traits.join(" "), d.figures.join(" "), (d.figuresEn||[]).join(" ")]
+      .join(" ").toLowerCase().includes(q);
+  });
+}
+
+/* 渲染卡片 */
+function render(){
+  const list = filtered();
+  $("#count").textContent = T().index(list.length);
+  if (!list.length){
+    grid.innerHTML = `<div class="empty">${T().empty}</div>`;
+    return;
+  }
+  grid.innerHTML = list.map((d,i) => `
+    <article class="card" data-idx="${d.idx}" style="animation-delay:${Math.min(i*30,420)}ms">
+      <div class="card-top">
+        <span class="card-no">No.${pad(d.idx)}</span>
+        <span class="card-cat">${catOf(d.cat)}</span>
+      </div>
+      <div>
+        <h3>${nameOf(d)}</h3>
+        <div class="en">${subnameOf(d)}</div>
+      </div>
+      <div class="meta">${eraOf(d)} · ${regionOf(d)}</div>
+      <div class="tags">${d.traits.slice(0,3).map(t=>`<span>${t}</span>`).join("")}</div>
+      <div class="palette">${d.palette.map(c=>`<i style="background:${c}" title="${c}"></i>`).join("")}</div>
+    </article>`).join("");
+}
+
+/* 详情档案 */
+function buildPrompt(d){
+  const lead = d.cat === "designer" ? `in the style of ${d.en}` : `${d.en} style`;
+  return { lead, full: `[your subject], ${lead}, ${d.traits.join(", ")}, high quality, highly detailed` };
+}
+function links(d){
+  const e = encodeURIComponent(d.en), z = encodeURIComponent(d.zh);
+  const urls = [
+    `https://zh.wikipedia.org/wiki/${z}`,
+    `https://en.wikipedia.org/wiki/${e}`,
+    `https://www.google.com/search?tbm=isch&q=${e}+design`,
+    `https://www.pinterest.com/search/pins/?q=${e}`,
+    `https://www.behance.net/search/projects?search=${e}`,
+    `https://www.are.na/search/${e}`
+  ];
+  return T().links.map((t,i)=>[t, urls[i]]);
+}
+function openDossier(idx){
+  currentIdx = idx;
+  const d = DATA[idx], p = buildPrompt(d);
+  dossier.innerHTML = `
+    <div class="dossier-head">
+      <div>
+        <div class="no">${T().file} No.${pad(idx)} — ${catOf(d.cat)}</div>
+        <h2>${nameOf(d)}</h2>
+        <div class="en">${subnameOf(d)}</div>
+      </div>
+      <button class="btn-close" id="close" aria-label="close">✕</button>
+    </div>
+    <div class="dossier-body">
+      <aside class="dossier-side">
+        <div class="field"><label>${T().period}</label><p>${eraOf(d)}</p></div>
+        <div class="field"><label>${T().region}</label><p>${regionOf(d)}</p></div>
+        <div class="field"><label>${T().palette}</label>
+          <div class="swatches">
+            ${d.palette.map(c=>`<button class="swatch" data-copy="${c}"><i style="background:${c}"></i>${c}</button>`).join("")}
+          </div>
+        </div>
+      </aside>
+      <div class="dossier-main">
+        <section>
+          <div class="sec-title">${T().overview}</div>
+          <p class="desc">${descOf(d)}</p>
+        </section>
+        <section>
+          <div class="sec-title">${T().figures}</div>
+          <ul class="figures">${figuresOf(d).map(f=>`<li>${f}</li>`).join("")}</ul>
+        </section>
+        <section>
+          <div class="sec-title">${T().keywords}</div>
+          <div class="trait-tags">${d.traits.map(t=>`<button data-copy="${t}">${t}</button>`).join("")}</div>
+        </section>
+        <section>
+          <div class="sec-title">${T().prompt}</div>
+          <div class="prompt-box">
+            <span class="ph">[your subject]</span>, ${p.lead}, ${d.traits.join(", ")}, high quality, highly detailed
+            <button class="btn-copy" data-copy="${p.full.replace(/"/g,"&quot;")}">${T().copy}</button>
+          </div>
+        </section>
+        <section>
+          <div class="sec-title">${T().refs}</div>
+          <div class="links">${links(d).map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join("")}</div>
+        </section>
+      </div>
+    </div>`;
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeDossier(){
+  currentIdx = null;
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+/* 语言切换 */
+function applyLang(){
+  document.documentElement.lang = lang === "en" ? "en" : "zh-CN";
+  document.title = T().docTitle;
+  document.body.classList.toggle("en", lang === "en");
+  $("#stamp").textContent = T().stamp;
+  $("#title").innerHTML = T().title;
+  $("#subtitle").textContent = T().sub;
+  $("#hdesc").textContent = T().desc;
+  $("#search").placeholder = T().ph;
+  $("#random").textContent = T().random;
+  $("#langbtn").textContent = T().langBtn;
+  $("#hint").textContent = T().hint;
+  $("#foot1").textContent = T().foot1;
+  $("#foot2").textContent = T().foot2;
+  toast.textContent = T().copied;
+  renderStats();
+  renderCats();
+  render();
+  if (currentIdx !== null) openDossier(currentIdx);
+}
+
+/* 事件 */
+$("#cats").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("on"));
+  b.classList.add("on");
+  activeCat = b.dataset.cat;
+  render();
+});
+grid.addEventListener("click", e => {
+  const c = e.target.closest(".card");
+  if (c) openDossier(+c.dataset.idx);
+});
+overlay.addEventListener("click", e => {
+  if (e.target === overlay || e.target.closest("#close")) closeDossier();
+  const btn = e.target.closest("[data-copy]");
+  if (btn){
+    navigator.clipboard.writeText(btn.dataset.copy).then(()=>{
+      toast.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>toast.classList.remove("show"), 1600);
+    });
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeDossier();
+  if (e.key === "/" && document.activeElement !== $("#search")){
+    e.preventDefault(); $("#search").focus();
+  }
+});
+$("#search").addEventListener("input", e => { query = e.target.value; render(); });
+$("#random").addEventListener("click", () => openDossier(Math.floor(Math.random()*DATA.length)));
+$("#langbtn").addEventListener("click", () => {
+  lang = lang === "zh" ? "en" : "zh";
+  localStorage.setItem("archive-lang", lang);
+  applyLang();
+});
+
+applyLang();
+</script>
+</body>
+</html>
