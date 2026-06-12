@@ -100,6 +100,7 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
   background:var(--paper);
 }
 .toolbar-inner{max-width:1280px;margin:0 auto;padding:14px 32px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+@media(max-width:1180px){.toolbar-inner{padding-right:76px}}
 .searchbox{
   flex:1;min-width:240px;display:flex;align-items:center;gap:10px;
   border:2px solid var(--ink);background:var(--card);padding:10px 14px;
@@ -371,9 +372,18 @@ body.pack-bevel .card,body.pack-bevel .searchbox,body.pack-bevel .head-stats,
 body.pack-bevel .btn-random,body.pack-bevel .prompt-box,body.pack-bevel .morph-card{
   clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
 }
-body.pack-bevel .chip,body.pack-bevel .links a,body.pack-bevel .trait-tags button,
-body.pack-bevel .btn-close,body.pack-bevel .card-cat,body.pack-bevel .cat-select select{
-  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+/* 斜切边框修复：外层填充墨色作边框，内层伪元素铺底色，描边完整沿斜边走 */
+body.pack-bevel .card,body.pack-bevel .searchbox,body.pack-bevel .head-stats,body.pack-bevel .morph-card{
+  border-color:transparent;background:var(--ink);position:relative;
+}
+body.pack-bevel .card::before,body.pack-bevel .searchbox::before,
+body.pack-bevel .head-stats::before,body.pack-bevel .morph-card::before{
+  content:"";position:absolute;inset:2px;background:var(--card);
+  clip-path:polygon(13px 0,100% 0,100% calc(100% - 13px),calc(100% - 13px) 100%,0 100%,0 13px);
+}
+body.pack-bevel .card > *,body.pack-bevel .searchbox > *,
+body.pack-bevel .head-stats > div,body.pack-bevel .morph-card > *{
+  position:relative;z-index:1;
 }
 
 /* —— 装饰艺术 deco：对称切角 + 日出放射纹 —— */
@@ -387,14 +397,23 @@ body.pack-deco .card,body.pack-deco .searchbox,body.pack-deco .head-stats,
 body.pack-deco .btn-random,body.pack-deco .prompt-box,body.pack-deco .morph-card{
   clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);
 }
-body.pack-deco .chip,body.pack-deco .links a,body.pack-deco .trait-tags button,
-body.pack-deco .btn-close,body.pack-deco .cat-select select{
-  clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px);
+body.pack-deco .card,body.pack-deco .searchbox,body.pack-deco .head-stats,body.pack-deco .morph-card{
+  border-color:transparent;background:var(--ink);position:relative;
+}
+body.pack-deco .card::before,body.pack-deco .searchbox::before,
+body.pack-deco .head-stats::before,body.pack-deco .morph-card::before{
+  content:"";position:absolute;inset:2px;background:var(--card);
+  clip-path:polygon(11px 0,calc(100% - 11px) 0,100% 11px,100% calc(100% - 11px),calc(100% - 11px) 100%,11px 100%,0 calc(100% - 11px),0 11px);
+}
+body.pack-deco .card > *,body.pack-deco .searchbox > *,
+body.pack-deco .head-stats > div,body.pack-deco .morph-card > *{
+  position:relative;z-index:1;
 }
 
-/* 切角包的悬停补偿：clip-path 会裁掉外阴影，改用描边提亮 */
-body.pack-bevel .card:hover,body.pack-deco .card:hover,body.pack-pixel .card:hover{
-  box-shadow:none;border-color:var(--blue);
+/* 切角包的悬停补偿：clip-path 会裁掉外阴影，改为「边框」(外层填充)变色 */
+body.pack-bevel .card:hover,body.pack-deco .card:hover,body.pack-pixel .card:hover,
+body.pack-bevel .searchbox:focus-within,body.pack-deco .searchbox:focus-within,body.pack-pixel .searchbox:focus-within{
+  box-shadow:none;background:var(--blue);
 }
 
 /* —— 霓虹 neon：微圆 + 扫描线 + 辉光 —— */
@@ -425,8 +444,15 @@ body.pack-pixel .card,body.pack-pixel .searchbox,body.pack-pixel .btn-random,
 body.pack-pixel .prompt-box,body.pack-pixel .morph-card{
   clip-path:polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
 }
-body.pack-pixel .chip,body.pack-pixel .links a,body.pack-pixel .trait-tags button{
-  clip-path:polygon(0 5px,5px 5px,5px 0,calc(100% - 5px) 0,calc(100% - 5px) 5px,100% 5px,100% calc(100% - 5px),calc(100% - 5px) calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,5px calc(100% - 5px),0 calc(100% - 5px));
+body.pack-pixel .card,body.pack-pixel .searchbox,body.pack-pixel .morph-card{
+  border-color:transparent;background:var(--ink);position:relative;
+}
+body.pack-pixel .card::before,body.pack-pixel .searchbox::before,body.pack-pixel .morph-card::before{
+  content:"";position:absolute;inset:2px;background:var(--card);
+  clip-path:polygon(0 8px,8px 8px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 8px) calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 8px),0 calc(100% - 8px));
+}
+body.pack-pixel .card > *,body.pack-pixel .searchbox > *,body.pack-pixel .morph-card > *{
+  position:relative;z-index:1;
 }
 
 /* —— 禅意 zen：细线框 + 素背景 + 柔影 —— */
