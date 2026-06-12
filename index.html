@@ -306,6 +306,32 @@ footer{
   font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-soft);
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;line-height:2;
 }
+/* ============ 变身公告 ============ */
+.morph-announce{
+  position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;
+  background:rgba(12,10,8,.5);backdrop-filter:blur(4px);padding:20px;
+  opacity:1;transition:opacity .35s ease;cursor:pointer;
+}
+.morph-announce.open{display:flex}
+.morph-announce.closing{opacity:0}
+.morph-card{
+  border:3px solid var(--ink);background:var(--card);
+  box-shadow:10px 10px 0 var(--blue);
+  padding:38px 48px 30px;text-align:center;max-width:520px;width:100%;
+  animation:morph-pop .55s cubic-bezier(.2,1.4,.4,1) backwards;
+}
+@keyframes morph-pop{from{opacity:0;transform:scale(1.5) rotate(-3deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.morph-card .lbl{
+  font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--red);
+  font-weight:600;text-transform:uppercase;margin-bottom:14px;
+}
+.morph-card h4{font-size:clamp(26px,5vw,40px);font-weight:900;line-height:1.2}
+.morph-card .sub{font-family:var(--serif-en);font-style:italic;font-size:17px;color:var(--blue);margin-top:6px}
+body.en .morph-card .sub{font-family:var(--serif-zh);font-style:normal}
+.morph-card .strip{display:flex;height:16px;border:1.5px solid var(--ink);margin:20px auto 16px;max-width:240px}
+.morph-card .strip i{flex:1}
+.morph-card .hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-soft)}
+
 .toast{
   position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);
   background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:12px;
@@ -358,6 +384,7 @@ footer{
 <div class="overlay" id="overlay">
   <div class="dossier" id="dossier" role="dialog" aria-modal="true"></div>
 </div>
+<div class="morph-announce" id="announce" role="status"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1001,7 +1028,8 @@ const UI = {
     langTitle:"Switch to English / 切换为英文",
     catLabel:"选择类别",
     moodStamp:d=>`风格附身 · ${d.zh}`,
-    morphToast:d=>`本站已变身「${d.zh}」风格 — 点右上 ↺ 复原`,
+    announceLbl:"风格附身",
+    announceHint:"点右上 ↺ 随时复原",
     resetTitle:"恢复默认风格",
     resetToast:"已恢复默认风格"
   },
@@ -1030,7 +1058,8 @@ const UI = {
     langTitle:"切换到中文 / Switch to Chinese",
     catLabel:"Select category",
     moodStamp:d=>`MOOD · ${d.en.toUpperCase()}`,
-    morphToast:d=>`Now wearing “${d.en}” — hit ↺ to undo`,
+    announceLbl:"Now Wearing",
+    announceHint:"hit ↺ top-right to undo",
     resetTitle:"Reset to default theme",
     resetToast:"Back to the default theme"
   }
@@ -1239,8 +1268,31 @@ function applyTheme(idx){
   themeIdx = idx;
   updateStamp();
   $("#resetbtn").classList.add("show");
-  showToast(T().morphToast(d));
+  announceMorph(d);
 }
+
+/* 屏幕中央的变身公告：停留片刻后自动淡出，点击可提前关闭 */
+const announce = $("#announce");
+function announceMorph(d){
+  announce.innerHTML = `<div class="morph-card">
+    <div class="lbl">${T().announceLbl}</div>
+    <h4>${nameOf(d)}</h4>
+    <div class="sub">${subnameOf(d)}</div>
+    <div class="strip">${d.palette.map(c=>`<i style="background:${c}"></i>`).join("")}</div>
+    <div class="hint">${T().announceHint}</div>
+  </div>`;
+  announce.classList.remove("closing");
+  announce.classList.add("open");
+  clearTimeout(announceMorph._t);
+  announceMorph._t = setTimeout(hideAnnounce, 2400);
+}
+function hideAnnounce(){
+  if (!announce.classList.contains("open")) return;
+  announce.classList.add("closing");
+  clearTimeout(hideAnnounce._t);
+  hideAnnounce._t = setTimeout(()=>announce.classList.remove("open","closing"), 360);
+}
+announce.addEventListener("click", () => { clearTimeout(announceMorph._t); hideAnnounce(); });
 
 function resetTheme(){
   morphTransition();
