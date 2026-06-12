@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<!-- 风格包字体：仅在对应风格被「附身」激活时才会真正下载 -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..900&family=Nunito:wght@400..900&family=Baloo+2:wght@400..800&family=Cormorant+Garamond:ital,wght@0,400..700;1,400..700&family=Oswald:wght@400..700&family=Poiret+One&family=Orbitron:wght@400..900&family=VT323&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Special+Elite&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Noto+Sans+SC:wght@400..900&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#F2EDE2;
@@ -315,12 +317,18 @@ body[class*="pack-"] #count::before{content:var(--motif,"■") "  ";color:var(--
 body[class*="pack-"] .sec-title::before{content:var(--motif,"■");color:var(--red);font-size:9px}
 body[class*="pack-"] #stamp::before{content:var(--motif,"■") " "}
 
-/* —— 瑞士 swiss：默认直角网格，仅换符号 —— */
-body.pack-swiss{--motif:"■"}
+/* —— 瑞士 swiss：直角网格 + 中性无衬线 —— */
+body.pack-swiss{
+  --motif:"■";
+  --serif-en:'Archivo',sans-serif;
+  --serif-zh:'Archivo','Noto Sans SC',sans-serif;
+}
 
 /* —— 微圆 soft：8–12px 圆角 + 细点阵 —— */
 body.pack-soft{
   --r-lg:12px;--r-md:8px;--r-sm:5px;--motif:"●";
+  --serif-en:'Nunito',sans-serif;
+  --serif-zh:'Nunito','Noto Sans SC',sans-serif;
   background-image:radial-gradient(var(--line) 1.5px,transparent 1.6px);
   background-size:26px 26px;
 }
@@ -328,6 +336,8 @@ body.pack-soft{
 /* —— 药丸 pill：全圆角玩具感 + 彩色波点 —— */
 body.pack-pill{
   --r-lg:26px;--r-md:999px;--r-sm:999px;--motif:"⬤";
+  --serif-en:'Baloo 2',sans-serif;
+  --serif-zh:'Baloo 2','ZCOOL KuaiLe','Noto Sans SC',sans-serif;
   background-image:
     radial-gradient(color-mix(in srgb,var(--blue) 20%,transparent) 5px,transparent 6px),
     radial-gradient(color-mix(in srgb,var(--red) 16%,transparent) 4px,transparent 5px);
@@ -339,6 +349,8 @@ body.pack-pill .head-stats div{border-right-width:1.5px}
 /* —— 有机 organic：不对称鹅卵石圆角 + 同心波纹 —— */
 body.pack-organic{
   --r-lg:26px 9px 30px 8px;--r-md:16px 6px 14px 7px;--r-sm:9px 4px 10px 5px;--motif:"❀";
+  --serif-en:'Cormorant Garamond',serif;
+  --serif-zh:'Cormorant Garamond','Noto Serif SC',serif;
   background-image:repeating-radial-gradient(circle at 14% -12%,transparent 0 40px,var(--line) 40px 41px);
 }
 /* 有机风按钮：叶片形，悬停时翻转叶脉方向 */
@@ -351,6 +363,8 @@ body.pack-organic .chip.on{border-radius:18px 5px 18px 5px}
 /* —— 斜切 bevel：切角多边形 + 斜纹 —— */
 body.pack-bevel{
   --motif:"◆";
+  --serif-en:'Oswald',sans-serif;
+  --serif-zh:'Oswald','Noto Sans SC',sans-serif;
   background-image:repeating-linear-gradient(45deg,transparent 0 26px,var(--line) 26px 27px);
 }
 body.pack-bevel .card,body.pack-bevel .searchbox,body.pack-bevel .head-stats,
@@ -365,6 +379,8 @@ body.pack-bevel .btn-close,body.pack-bevel .card-cat,body.pack-bevel .cat-select
 /* —— 装饰艺术 deco：对称切角 + 日出放射纹 —— */
 body.pack-deco{
   --motif:"◈";
+  --serif-en:'Poiret One',sans-serif;
+  --serif-zh:'Poiret One','Noto Sans SC',sans-serif;
   background-image:repeating-conic-gradient(from -90deg at 50% -18%,var(--line) 0deg .5deg,transparent .5deg 7deg);
 }
 body.pack-deco .card,body.pack-deco .searchbox,body.pack-deco .head-stats,
@@ -384,6 +400,8 @@ body.pack-bevel .card:hover,body.pack-deco .card:hover,body.pack-pixel .card:hov
 /* —— 霓虹 neon：微圆 + 扫描线 + 辉光 —— */
 body.pack-neon{
   --r-lg:8px;--r-md:4px;--r-sm:3px;--motif:"✦";
+  --serif-en:'Orbitron',sans-serif;
+  --serif-zh:'Orbitron','Noto Sans SC',sans-serif;
   --shadow-hover:0 0 26px color-mix(in srgb,var(--blue) 65%,transparent);
   background-image:repeating-linear-gradient(0deg,transparent 0 3px,color-mix(in srgb,var(--ink) 7%,transparent) 3px 4px);
 }
@@ -395,6 +413,9 @@ body.pack-neon .links a:hover{box-shadow:0 0 14px color-mix(in srgb,var(--red) 7
 /* —— 像素 pixel：阶梯锯齿角 + 小方格 —— */
 body.pack-pixel{
   --motif:"▚";
+  --serif-en:'VT323',monospace;
+  --serif-zh:'VT323','Noto Sans SC',monospace;
+  --mono:'VT323',monospace;
   background-image:
     repeating-linear-gradient(0deg,transparent,transparent 11px,var(--line) 11px,var(--line) 12px),
     repeating-linear-gradient(90deg,transparent,transparent 11px,var(--line) 11px,var(--line) 12px);
@@ -411,6 +432,8 @@ body.pack-pixel .chip,body.pack-pixel .links a,body.pack-pixel .trait-tags butto
 /* —— 禅意 zen：细线框 + 素背景 + 柔影 —— */
 body.pack-zen{
   --r-lg:2px;--r-md:2px;--r-sm:2px;--motif:"○";
+  --serif-en:'EB Garamond',serif;
+  --serif-zh:'EB Garamond','Noto Serif SC',serif;
   --shadow-hover:0 14px 34px color-mix(in srgb,var(--ink) 14%,transparent);
   background-image:none;
 }
@@ -422,6 +445,8 @@ body.pack-zen .dossier{border-width:1px;box-shadow:0 24px 60px color-mix(in srgb
 /* —— 粗野 brutal：3px 厚框 + 巨硬阴影 + 无图案 —— */
 body.pack-brutal{
   --motif:"█";
+  --serif-en:'Archivo',sans-serif;
+  --serif-zh:'Archivo','Noto Sans SC',sans-serif;
   --shadow-hover:9px 9px 0 var(--ink);
   background-image:none;
 }
@@ -431,7 +456,11 @@ body.pack-brutal .palette,body.pack-brutal .cat-select select{border-width:3px}
 body.pack-brutal .card h3{text-transform:uppercase;letter-spacing:.02em}
 
 /* —— 混乱 chaos：卡片歪斜 + 杂乱斜线 —— */
-body.pack-chaos{--motif:"✖"}
+body.pack-chaos{
+  --motif:"✖";
+  --serif-en:'Special Elite',cursive;
+  --serif-zh:'Special Elite','ZCOOL QingKe HuangYou','Noto Sans SC',cursive;
+}
 body.pack-chaos{
   background-image:
     repeating-linear-gradient(0deg,transparent,transparent 47px,var(--line) 47px,var(--line) 48px),
@@ -448,6 +477,8 @@ body.pack-chaos #stamp{transform:rotate(-3deg)}
 /* —— 华丽 ornate：内描金双框 + 交叉网纹 —— */
 body.pack-ornate{
   --r-lg:3px;--r-md:3px;--r-sm:2px;--motif:"❖";
+  --serif-en:'Playfair Display',serif;
+  --serif-zh:'Playfair Display','Noto Serif SC',serif;
   background-image:
     repeating-linear-gradient(45deg,transparent 0 30px,var(--line) 30px 31px),
     repeating-linear-gradient(-45deg,transparent 0 30px,var(--line) 30px 31px);
@@ -456,6 +487,15 @@ body.pack-ornate .card,body.pack-ornate .dossier,body.pack-ornate .morph-card,bo
   outline:1px solid var(--ink);outline-offset:-7px;
 }
 body.pack-ornate .prompt-box{outline:1px solid var(--paper);outline-offset:-7px}
+
+/* 单字重显示字体的标题适配：避免合成粗体变形 */
+body.pack-deco h1,body.pack-deco h2,body.pack-deco .card h3,body.pack-deco .morph-card h4,
+body.pack-pixel h1,body.pack-pixel h2,body.pack-pixel .card h3,body.pack-pixel .morph-card h4,
+body.pack-chaos h1,body.pack-chaos h2,body.pack-chaos .card h3,body.pack-chaos .morph-card h4{
+  font-weight:400;
+}
+body.pack-deco h1{letter-spacing:.08em;text-transform:uppercase}
+body.pack-deco .card h3{letter-spacing:.05em}
 
 /* ============ 生成新卡 ============ */
 .btn-generate{
