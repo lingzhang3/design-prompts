@@ -57,7 +57,7 @@ header{
 }
 .stamp{
   border:2px solid var(--red);color:var(--red);
-  padding:6px 12px;font-weight:600;
+  padding:6px 12px;font-weight:600;margin-right:56px;
   transform:rotate(3deg);
   font-size:11px;letter-spacing:.2em;
   animation:stamp-in .6s cubic-bezier(.2,1.4,.4,1) .3s backwards;
@@ -121,11 +121,14 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 }
 .btn-random:hover{background:var(--red);border-color:var(--red);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
 .btn-lang{
-  font-family:var(--mono);font-size:12px;letter-spacing:.1em;
-  border:2px solid var(--blue);background:transparent;color:var(--blue);
-  padding:12px 18px;cursor:pointer;transition:.15s;font-weight:600;
+  position:fixed;top:18px;right:18px;z-index:60;
+  width:44px;height:44px;border-radius:50%;
+  border:2px solid var(--ink);background:var(--card);color:var(--blue);
+  font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:3px 3px 0 rgba(25,21,18,.3);transition:.15s;
 }
-.btn-lang:hover{background:var(--blue);color:var(--paper);transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.btn-lang:hover{background:var(--blue);border-color:var(--blue);color:var(--paper);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--red)}
 .cats{max-width:1280px;margin:0 auto;padding:0 32px 14px;display:flex;gap:8px;flex-wrap:wrap}
 .chip{
   font-family:var(--mono);font-size:12px;letter-spacing:.06em;
@@ -136,6 +139,21 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 .chip:hover{background:var(--paper-2)}
 .chip.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
 .chip.on i{color:rgba(255,255,255,.65)}
+.cat-select{display:none;position:relative;width:100%}
+.cat-select select{
+  appearance:none;-webkit-appearance:none;width:100%;
+  font-family:var(--mono);font-size:13px;letter-spacing:.06em;
+  padding:11px 40px 11px 14px;border:2px solid var(--ink);
+  background:var(--card);color:var(--ink);cursor:pointer;border-radius:0;
+}
+.cat-select::after{
+  content:"▾";position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  pointer-events:none;font-family:var(--mono);font-size:13px;color:var(--ink-soft);
+}
+@media(max-width:640px){
+  .cats .chip{display:none}
+  .cat-select{display:block}
+}
 
 /* ============ 卡片网格 ============ */
 main{max-width:1280px;margin:0 auto;padding:36px 32px 90px}
@@ -284,6 +302,8 @@ footer{
 </head>
 <body>
 
+<button class="btn-lang" id="langbtn"></button>
+
 <header>
   <div class="head-inner">
     <div class="head-top">
@@ -305,7 +325,6 @@ footer{
       <kbd>/</kbd>
     </div>
     <button class="btn-random" id="random"></button>
-    <button class="btn-lang" id="langbtn" title="切换语言 / Switch language"></button>
   </div>
   <div class="cats" id="cats"></div>
 </div>
@@ -962,7 +981,9 @@ const UI = {
     links:["维基百科·中","Wikipedia·EN","Google 图片","Pinterest 案例","Behance 项目","Are.na 灵感"],
     foot1:"※ 词条数据存于本文件 DATA 数组中，可自行增补 · 色板与关键词为风格提炼，仅供创作参考",
     foot2:"设计语汇档案馆 · DESIGN PROMPT ARCHIVE",
-    langBtn:"EN VERSION"
+    langBtn:"EN",
+    langTitle:"Switch to English / 切换为英文",
+    catLabel:"选择类别"
   },
   en:{
     docTitle:"The Design Prompt Archive · 设计语汇档案馆",
@@ -985,7 +1006,9 @@ const UI = {
     links:["Wikipedia ZH","Wikipedia EN","Google Images","Pinterest","Behance","Are.na"],
     foot1:"※ All entries live in the DATA array inside this file — extend freely · Palettes & keywords are stylistic distillations for creative reference",
     foot2:"DESIGN PROMPT ARCHIVE · 设计语汇档案馆",
-    langBtn:"中文版"
+    langBtn:"中",
+    langTitle:"切换到中文 / Switch to Chinese",
+    catLabel:"Select category"
   }
 };
 
@@ -1013,13 +1036,17 @@ function renderStats(){
     `<div><b>${DATA.reduce((a,d)=>a+d.traits.length,0)}</b><span>${T().stats[2]}</span></div>`;
 }
 
-/* 类别筛选 chips */
+/* 类别筛选：桌面 chips + 移动端下拉 */
 function renderCats(){
   const counts = {};
   DATA.forEach(d => counts[d.cat] = (counts[d.cat] || 0) + 1);
   let html = `<button class="chip${activeCat==="all"?" on":""}" data-cat="all">${T().all} <i>${DATA.length}</i></button>`;
   for (const k in CATS)
     html += `<button class="chip${activeCat===k?" on":""}" data-cat="${k}">${catOf(k)} <i>${counts[k]||0}</i></button>`;
+  let opts = `<option value="all"${activeCat==="all"?" selected":""}>${T().all} · ${DATA.length}</option>`;
+  for (const k in CATS)
+    opts += `<option value="${k}"${activeCat===k?" selected":""}>${catOf(k)} · ${counts[k]||0}</option>`;
+  html += `<div class="cat-select"><select id="catselect" aria-label="${T().catLabel}">${opts}</select></div>`;
   $("#cats").innerHTML = html;
 }
 
@@ -1145,6 +1172,8 @@ function applyLang(){
   $("#search").placeholder = T().ph;
   $("#random").textContent = T().random;
   $("#langbtn").textContent = T().langBtn;
+  $("#langbtn").title = T().langTitle;
+  $("#langbtn").setAttribute("aria-label", T().langTitle);
   $("#hint").textContent = T().hint;
   $("#foot1").textContent = T().foot1;
   $("#foot2").textContent = T().foot2;
@@ -1161,6 +1190,13 @@ $("#cats").addEventListener("click", e => {
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("on"));
   b.classList.add("on");
   activeCat = b.dataset.cat;
+  const sel = $("#catselect"); if (sel) sel.value = activeCat;
+  render();
+});
+$("#cats").addEventListener("change", e => {
+  if (e.target.id !== "catselect") return;
+  activeCat = e.target.value;
+  document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c.dataset.cat === activeCat));
   render();
 });
 grid.addEventListener("click", e => {
