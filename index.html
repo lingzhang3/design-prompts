@@ -1512,14 +1512,14 @@ function openDossier(idx){
     </div>`;
   overlay.classList.add("open");
   document.body.style.overflow = "hidden";
+  // 点开任何一张卡片，整站立即变身为它的风格（已是当前风格则跳过）；
+  // 弹窗已展示风格信息，故此路径不弹居中公告
+  if (themeIdx !== idx) applyTheme(idx, false);
 }
 function closeDossier(){
-  const i = currentIdx;
   currentIdx = null;
   overlay.classList.remove("open");
   document.body.style.overflow = "";
-  // 读完任何一张卡片，整站变身为它的风格（已是当前风格则跳过）
-  if (i !== null && themeIdx !== i) applyTheme(i);
 }
 
 /* ================================================================
@@ -1582,7 +1582,7 @@ function morphTransition(){
   morphTransition._t = setTimeout(()=>document.body.classList.remove("morphing"), 900);
 }
 
-function applyTheme(idx){
+function applyTheme(idx, announce = true){
   const d = DATA[idx];
   const sorted = d.palette.map(hx).sort((a,b)=>lumOf(b)-lumOf(a)); // 亮 → 暗
   const dark = lumOf(hx(d.palette[0])) < 0.3;                       // 主导色很暗 → 暗色模式
@@ -1613,7 +1613,7 @@ function applyTheme(idx){
   themeIdx = idx;
   updateStamp();
   $("#resetbtn").classList.add("show");
-  announceMorph(d);
+  if (announce) announceMorph(d);
 }
 
 /* 屏幕中央的变身公告：停留片刻后自动淡出，点击可提前关闭 */
