@@ -97,6 +97,10 @@ body.en .head-en{font-family:var(--serif-zh);font-style:normal;font-size:clamp(1
 /* ============ 工具栏 ============ */
 .toolbar{
   position:sticky;top:0;z-index:50;
+  transition:background-color .25s ease;
+}
+/* 仅在向下滚动、工具栏吸顶后才显示跟随主题的毛玻璃背景 */
+.toolbar.stuck{
   background:color-mix(in srgb, var(--paper) 70%, transparent);
   backdrop-filter:blur(12px) saturate(1.15);
   -webkit-backdrop-filter:blur(12px) saturate(1.15);
@@ -1936,6 +1940,15 @@ $("#langbtn").addEventListener("click", () => {
 });
 
 applyLang();
+
+/* 工具栏吸顶检测：到达顶部 (sticky top:0) 时加 .stuck 显示毛玻璃背景 */
+const toolbarEl = document.querySelector(".toolbar");
+function updateStuck(){
+  toolbarEl.classList.toggle("stuck", toolbarEl.getBoundingClientRect().top <= 0.5);
+}
+window.addEventListener("scroll", updateStuck, {passive:true});
+window.addEventListener("resize", updateStuck);
+updateStuck();
 </script>
 </body>
 </html>
