@@ -523,6 +523,12 @@ body.pack-chaos h1,body.pack-chaos h2,body.pack-chaos .card h3,body.pack-chaos .
 body.pack-deco h1{letter-spacing:.08em;text-transform:uppercase}
 body.pack-deco .card h3{letter-spacing:.05em}
 
+/* —— 工艺美术运动专属：William Morris 风植物藤叶壁纸 —— */
+body.entry-arts-and-crafts-movement{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='240' viewBox='0 0 200 240'%3E%3Cg fill='none' stroke='%235B6E3F' stroke-opacity='0.3' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M50 250 C 28 200 72 180 50 130 C 28 80 72 60 50 -10'/%3E%3Cpath d='M150 250 C 128 200 172 180 150 130 C 128 80 172 60 150 -10'/%3E%3Cpath d='M50 170 C 70 168 90 150 100 128'/%3E%3Cpath d='M50 90 C 30 88 12 70 0 50'/%3E%3Cpath d='M150 170 C 130 168 110 150 100 128'/%3E%3Cpath d='M150 90 C 170 88 188 70 200 50'/%3E%3C/g%3E%3Cg fill='%235B6E3F' fill-opacity='0.16'%3E%3Cpath d='M100 128 C 116 120 124 102 120 84 C 104 92 96 110 100 128 Z'/%3E%3Cpath d='M100 128 C 84 120 76 102 80 84 C 96 92 104 110 100 128 Z'/%3E%3Cpath d='M0 50 C 16 42 24 24 20 6 C 4 14 -4 32 0 50 Z'/%3E%3Cpath d='M200 50 C 184 42 176 24 180 6 C 196 14 204 32 200 50 Z'/%3E%3Cpath d='M50 130 C 64 124 72 110 70 96 C 56 102 48 116 50 130 Z'/%3E%3Cpath d='M150 130 C 136 124 128 110 130 96 C 144 102 152 116 150 130 Z'/%3E%3C/g%3E%3Cg fill='%238A3324' fill-opacity='0.18'%3E%3Ccircle cx='100' cy='70' r='5'/%3E%3Ccircle cx='50' cy='130' r='4'/%3E%3Ccircle cx='150' cy='130' r='4'/%3E%3Ccircle cx='0' cy='240' r='5'/%3E%3Ccircle cx='200' cy='240' r='5'/%3E%3Ccircle cx='100' cy='240' r='4'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:170px 204px;
+}
+
 /* ============ 生成新卡 ============ */
 .gen-card{max-width:580px}
 .gen-body{padding:24px 30px 28px;display:flex;flex-direction:column;gap:14px}
@@ -1576,6 +1582,13 @@ function setPack(pack){
   if (pack) document.body.classList.add("pack-" + pack);
 }
 
+/* 某些词条有专属背景图案（如工艺美术运动的植物壁纸）：用 entry-<slug> 类挂载 */
+const slugify = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function setEntry(en){
+  [...document.body.classList].forEach(c => { if (c.startsWith("entry-")) document.body.classList.remove(c); });
+  if (en) document.body.classList.add("entry-" + slugify(en));
+}
+
 function morphTransition(){
   document.body.classList.add("morphing");
   clearTimeout(morphTransition._t);
@@ -1610,6 +1623,7 @@ function applyTheme(idx, announce = true){
   r.setProperty("--line", rgbaS(ink,0.18));
   r.setProperty("--line-strong", rgbaS(ink,0.55));
   setPack(d.pack || PACK_OF[d.en] || "swiss");
+  setEntry(d.en);
   themeIdx = idx;
   updateStamp();
   $("#resetbtn").classList.add("show");
@@ -1643,6 +1657,7 @@ function resetTheme(){
   morphTransition();
   THEME_VARS.forEach(v => document.documentElement.style.removeProperty(v));
   setPack(null);
+  setEntry(null);
   themeIdx = null;
   updateStamp();
   $("#resetbtn").classList.remove("show");
